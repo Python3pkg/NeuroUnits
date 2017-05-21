@@ -26,7 +26,7 @@
 # POSSIBILITY OF SUCH DAMAGE.
 # -------------------------------------------------------------------------------
 
-from base import ASTObject
+from .base import ASTObject
 from neurounits.errors import InternalError
 
 
@@ -362,7 +362,7 @@ class FunctionDefBuiltInInstantiation(ASTExpressionObject):
         assert function_def.is_builtin()
 
     def _summarise_node_full(self):
-        return '{%s(<id:%s>)}' % (self.function_def.funcname, ','.join(['%s:%s' % (k, id(v)) for (k, v) in self.parameters.items()]))
+        return '{%s(<id:%s>)}' % (self.function_def.funcname, ','.join(['%s:%s' % (k, id(v)) for (k, v) in list(self.parameters.items())]))
 
 
 class FunctionDefParameterInstantiation(ASTExpressionObject):

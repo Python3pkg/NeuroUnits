@@ -46,14 +46,14 @@ def do_test(args):
     plugins = plugin_classes.produce()
 
 
-    print 'Testing Plugins:'
+    print('Testing Plugins:')
     for plugin in plugins:
-        print ' * Plugin:', plugin.get_name()
+        print(' * Plugin:', plugin.get_name())
 
     # Run all:
-    print 'Running:'
+    print('Running:')
     for plugin in plugins:
-        print ' * Plugin:', plugin.get_name()
+        print(' * Plugin:', plugin.get_name())
         plugin.run(args)
 
 

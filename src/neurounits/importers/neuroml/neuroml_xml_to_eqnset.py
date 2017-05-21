@@ -246,7 +246,7 @@ def build_component( chlmlinfo, componentname=None ):
     gate_prop_terms = dict( [ (gate, '*'.join( [ gate_prop_names[gate] ] * gate.instances )) for gate in chlmlinfo.gates ] )
 
     if gate_prop_terms:
-        eqns.append( '%s = %s'% (Name.PropGatesOpen, '*'.join(gate_prop_terms.values() ) ) )
+        eqns.append( '%s = %s'% (Name.PropGatesOpen, '*'.join(list(gate_prop_terms.values()) ) ) )
     else:
         eqns.append( '%s = 1.0'% (Name.PropGatesOpen ) )
 
@@ -309,7 +309,7 @@ def build_component( chlmlinfo, componentname=None ):
         from std.math import fabs """
 
 
-    print initial_conditions
+    print(initial_conditions)
 
     initial_conditions_defaults = {
             'm_inf': 0.0,

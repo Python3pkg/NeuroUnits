@@ -42,7 +42,7 @@ def EnsureExisits(l):
 def safe_dict_merge(*args):
     out_dct = {}
     for dct in args:
-        for (k, v) in dct.iteritems():
+        for (k, v) in dct.items():
             if k in out_dct:
                 raise DuplicateKeyError(k)
             out_dct[k] = v
@@ -102,7 +102,7 @@ class LookUpDict(object):
 
     def get_objs_by(self, **kwargs):
         possible_objs = list(self._objs)
-        for attr, value in kwargs.items():
+        for attr, value in list(kwargs.items()):
             possible_objs = [ p for p in possible_objs if self.get_attr_value(p, attr) == value]
         return possible_objs
 
@@ -111,8 +111,8 @@ class LookUpDict(object):
     def get_single_obj_by(self, **kwargs):
         possible_objs = self.get_objs_by(**kwargs)
         if len(possible_objs) != 1:
-            print "Can't find object: %s [Found:%s]" % (kwargs, possible_objs)
-            print 'Options:', self._objs
+            print("Can't find object: %s [Found:%s]" % (kwargs, possible_objs))
+            print('Options:', self._objs)
             assert False
         return possible_objs[0]
 

@@ -54,27 +54,27 @@ def _is_node_analog(n):
 
 def build_compound_component(component_name, instantiate,  analog_connections=None, event_connections=None,  renames=None, connections=None, prefix='/', auto_remap_time=True, merge_nodes=None, interfaces_in=None, multiconnections=None, set_parameters=None):
 
-    lib_mgrs = list(set([comp.library_manager for comp in instantiate.values()]))
+    lib_mgrs = list(set([comp.library_manager for comp in list(instantiate.values())]))
 
     assert len(lib_mgrs) == 1 and lib_mgrs[0] is not None
     lib_mgr = lib_mgrs[0]
 
     # 1. Lets cloning all the subcomponents:
-    instantiate = dict([(name, component.clone()) for (name, component) in instantiate.items()])
+    instantiate = dict([(name, component.clone()) for (name, component) in list(instantiate.items())])
 
     symbols_not_to_rename = []
     if auto_remap_time:
         time_node = ast.TimeVariable(symbol='t')
         symbols_not_to_rename.append(time_node)
 
-        for component in instantiate.values():
+        for component in list(instantiate.values()):
 
             if component._time_node:
                 ReplaceNode.replace_and_check(srcObj=component._time_node, dstObj=time_node, root=component)
 
 
     # 2. Rename all the internal names of the objects:
-    for (subcomponent_name, component) in instantiate.items():
+    for (subcomponent_name, component) in list(instantiate.items()):
         ns_prefix = subcomponent_name + prefix
         # Symbols:
         for obj in component.terminal_symbols:
@@ -102,7 +102,7 @@ def build_compound_component(component_name, instantiate,  analog_connections=No
     builddata.rt_graphs = []
     builddata.symbolicconstants = []
 
-    for c in instantiate.values():
+    for c in list(instantiate.values()):
         for td in c.timederivatives:
             builddata.timederivatives.append(td)
 
@@ -128,12 +128,12 @@ def build_compound_component(component_name, instantiate,  analog_connections=No
                     name=component_name
                     )
     # Copy across the existing event port connnections
-    for subcomponent in instantiate.values():
+    for subcomponent in list(instantiate.values()):
         for conn in subcomponent._event_port_connections:
             comp.add_event_port_connection(conn)
 
     # Copy accross existing compound ports:
-    for component in instantiate.values():
+    for component in list(instantiate.values()):
         for interface in component._interface_connectors:
             comp.add_interface_connector(interface)
 
@@ -239,12 +239,12 @@ def build_compound_component(component_name, instantiate,  analog_connections=No
 
     # 5. Connect the relevant ports internally:
     for (src, dst) in analog_connections:
-        if isinstance(src, basestring):
+        if isinstance(src, str):
             src_obj = comp.get_terminal_obj(src)
         else:
             assert src in comp.all_terminal_objs()
             src_obj = src
-        if isinstance(dst, basestring):
+        if isinstance(dst, str):
             dst_obj = comp.get_terminal_obj(dst)
         else:
             assert dst in comp.all_terminal_objs(), 'Dest is not a terminal_symbols: %s' % dst

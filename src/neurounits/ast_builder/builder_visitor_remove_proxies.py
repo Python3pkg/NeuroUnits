@@ -98,7 +98,7 @@ class RemoveAllSymbolProxy(ASTVisitorBase):
     def VisitOnEvent(self, o, **kwargs):
         for a in o.actions:
             self.visit(a)
-        for p in o.parameters.values():
+        for p in list(o.parameters.values()):
             self.visit(p)
 
     def VisitTimeDerivativeByRegime(self, o, **kwargs):
@@ -107,8 +107,8 @@ class RemoveAllSymbolProxy(ASTVisitorBase):
         self.visit(o.rhs_map)
 
     def VisitRegimeDispatchMap(self, o, **kwargs):
-        o.rhs_map = dict([(reg, self.followSymbolProxy(rhs)) for (reg,rhs) in o.rhs_map.items()])
-        for rhs in o.rhs_map.values():
+        o.rhs_map = dict([(reg, self.followSymbolProxy(rhs)) for (reg,rhs) in list(o.rhs_map.items())])
+        for rhs in list(o.rhs_map.values()):
             self.visit(rhs)
 
     def VisitEqnAssignmentByRegime(self, o, **kwargs):
@@ -181,11 +181,11 @@ class RemoveAllSymbolProxy(ASTVisitorBase):
         self.visit(o.lhs)
 
     def VisitFunctionDefUserInstantiation(self, o, **kwargs):
-        for p in o.parameters.values():
+        for p in list(o.parameters.values()):
             self.visit(p)
 
     def VisitFunctionDefBuiltInInstantiation(self, o, **kwargs):
-        for p in o.parameters.values():
+        for p in list(o.parameters.values()):
             self.visit(p)
 
     def VisitFunctionDefInstantiationParameter(self, o, **kwargs):
@@ -196,7 +196,7 @@ class RemoveAllSymbolProxy(ASTVisitorBase):
         pass
 
     def VisitFunctionDefUser(self, o, **kwargs):
-        for p in o.parameters.values():
+        for p in list(o.parameters.values()):
             self.visit(p)
         o.rhs = self.followSymbolProxy(o.rhs)
         self.visit(o.rhs)

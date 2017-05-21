@@ -14,7 +14,7 @@ from neurounits.codegen.population_infrastructure import *
 import dIN_model
 import mn_model
 import rb_input_model
-import cPickle as pickle
+import pickle as pickle
 
 import hashlib
 
@@ -62,7 +62,7 @@ with open('mh_reduced_connectome.pickle') as f:
 
 network = Network()
 pops_by_name = {}
-for pop_name, pop_size in pop_sizes.items():
+for pop_name, pop_size in list(pop_sizes.items()):
     p = Population(
             name=pop_name,
             component=pop_components[pop_name],
@@ -74,8 +74,8 @@ for pop_name, pop_size in pop_sizes.items():
     pops_by_name[pop_name] = p
 
 
-for syn_index, ((pop1_name, pop2_name, (syn_type, strength)), conns) in enumerate(connections.items()):
-    print 'Adding connection: %s -> %s [type:%s strength:%s, num:%d]' % (pop1_name, pop2_name, syn_type, strength, len(conns))
+for syn_index, ((pop1_name, pop2_name, (syn_type, strength)), conns) in enumerate(list(connections.items())):
+    print('Adding connection: %s -> %s [type:%s strength:%s, num:%d]' % (pop1_name, pop2_name, syn_type, strength, len(conns)))
 
     #if syn_type != 'ampa':
     #    continue
@@ -152,7 +152,7 @@ network.add(
 # Work out the electrical coupling indices:
 gap_junction_indices = []
 for dIN_pop in [pop_LHS_dIN, pop_RHS_dIN]:
-    print dIN_pop
+    print(dIN_pop)
     for i in range(dIN_pop.start_index, dIN_pop.end_index):
         for j in range(dIN_pop.start_index, i):
             i_x = cell_positions['dINs'][i]
@@ -218,7 +218,7 @@ class NIOSPlotTrace(object):
         self.yrange = self.ylimits_int[1] - self.ylimits_int[0]
 
         self._global_rec_indices = _global_rec_indices
-        print self.node
+        print(self.node)
 
 
 class NIOSPlotRaster(object):
@@ -253,4 +253,4 @@ results = CBasedEqnWriterFixedNetwork(
 
                     )
 
-print 'File generated OK'
+print('File generated OK')

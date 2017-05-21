@@ -110,8 +110,8 @@ class CCompiler(object):
 
         compilation_string = string.Template("""${CC} -o ${OUTPUT_FILE} ${INPUT_FILES} ${CXX_FLAGS} ${CXX_INCL_PATHS} ${CXX_LIB_PATHS} ${CXX_LIBS} """).substitute(compilation_dict)
 
-        print 'Compiling:'
-        print compilation_string
+        print('Compiling:')
+        print(compilation_string)
         if os.path.exists(output_filename):
             os.unlink(output_filename)
         subprocess.check_call(compilation_string, shell=True)
@@ -119,14 +119,14 @@ class CCompiler(object):
         if not os.path.exists(output_filename):
             assert False, 'Could not file supposedly compiled file'
 
-        print 'Compilation sucessful'
+        print('Compilation sucessful')
 
         LD_LIB_PATH = 'export LD_LIBRARY_PATH="%s:$LD_LIBRARY_PATH"' % ':'.join(compilation_settings.additional_library_paths)
         exec_cmd = LD_LIB_PATH + "; " + os.path.abspath(output_filename)
         if run:
-            print 'Running:', exec_cmd
+            print('Running:', exec_cmd)
             subprocess.check_call(exec_cmd, shell=True)
         else:
-            print 'I would run::', exec_cmd
+            print('I would run::', exec_cmd)
 
 

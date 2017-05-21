@@ -12,7 +12,7 @@ import pylab
 from neurounits.codegen.cpp.fixed_point import CBasedEqnWriterFixedNetwork, NumberFormat
 from neurounits.codegen.population_infrastructure import *
 
-import cPickle as pickle
+import pickle as pickle
 from hdfjive import RasterGroup, RasterSubgroup
 from matplotlib.ticker import MaxNLocator
 
@@ -69,15 +69,15 @@ def test_simulateNetwork():
 
     network = Network()
     pops_by_name = {}
-    for pop_name, pop_size in pop_sizes.items():
+    for pop_name, pop_size in list(pop_sizes.items()):
         p = Population(name=pop_name, component=pop_components[pop_name], size=pop_size, parameters=pop_params[pop_name])
         network.add(p)
         assert not pop_name in pops_by_name
         pops_by_name[pop_name] = p
 
 
-    for syn_index, ((pop1_name, pop2_name, (syn_type, strength)), conns) in enumerate(connections.items()):
-        print 'Adding connection: %s -> %s [type:%s strength:%s, num:%d]' % (pop1_name, pop2_name, syn_type, strength, len(conns))
+    for syn_index, ((pop1_name, pop2_name, (syn_type, strength)), conns) in enumerate(list(connections.items())):
+        print('Adding connection: %s -> %s [type:%s strength:%s, num:%d]' % (pop1_name, pop2_name, syn_type, strength, len(conns)))
         p1 = pops_by_name[pop1_name]
         p2 = pops_by_name[pop2_name]
         synpop_name='SynPop%02d' % syn_index
@@ -151,7 +151,7 @@ def test_simulateNetwork():
     # Work out the electrical coupling indices:
     gap_junction_indices =   []
     for dIN_pop in [(pop_LHS_dIN), (pop_RHS_dIN)]:
-        print dIN_pop
+        print(dIN_pop)
         for i in range(dIN_pop.start_index, dIN_pop.end_index):
             for j in range(dIN_pop.start_index, i):
                 i_x = cell_positions['dINs'][i]
@@ -334,7 +334,7 @@ def test_simulateNetwork():
             trs = results.filter_traces(filt)
 
             xlim = (0.25,0.35)
-            print 'Plotting:', filt, len(trs)
+            print('Plotting:', filt, len(trs))
             for res in trs:
                 if xlim:
                     time_mask = np.logical_and(

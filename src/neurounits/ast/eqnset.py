@@ -26,7 +26,7 @@
 # POSSIBILITY OF SUCH DAMAGE.
 # -------------------------------------------------------------------------------
 
-from base import ASTObject
+from .base import ASTObject
 from neurounits.ast.astobjects import Parameter, SuppliedValue
 from neurounits.ast.astobjects_nineml import AnalogReducePort
 from neurounits.ast.astobjects_nineml import Regime
@@ -76,7 +76,7 @@ class Block(ASTObject):
         from neurounits.visitors.common.terminal_node_collector import EqnsetVisitorNodeCollector
         c = EqnsetVisitorNodeCollector()
         c.visit(self)
-        return itertools.chain(*c.nodes.values())
+        return itertools.chain(*list(c.nodes.values()))
 
 
 class Library(Block):
@@ -455,12 +455,12 @@ class NineMLComponent(Block):
 
 
     def build_interface_connector(self, local_name, porttype, direction, wire_mapping_txts):
-        assert isinstance(local_name, basestring)
-        assert isinstance(porttype, basestring)
-        assert isinstance(direction, basestring)
+        assert isinstance(local_name, str)
+        assert isinstance(porttype, str)
+        assert isinstance(direction, str)
         for src, dst in wire_mapping_txts:
-            assert isinstance(src, basestring)
-            assert isinstance(dst, basestring)
+            assert isinstance(src, str)
+            assert isinstance(dst, str)
 
         import neurounits.ast as ast
         interface_def = self.library_manager.get(porttype)
@@ -519,37 +519,37 @@ class NineMLComponent(Block):
         return 'NineML Component: %s' % self.name
 
     def summarise(self):
-        print
-        print 'NineML Component: %s' % self.name
-        print '  Paramters: [%s]' %', '.join("'%s (%s)'" %(p.symbol, p.get_dimension()) for p in self._parameters_lut)
-        print '  StateVariables: [%s]' % ', '.join("'%s'" %p.symbol for p in self.state_variables)
+        print()
+        print('NineML Component: %s' % self.name)
+        print('  Paramters: [%s]' %', '.join("'%s (%s)'" %(p.symbol, p.get_dimension()) for p in self._parameters_lut))
+        print('  StateVariables: [%s]' % ', '.join("'%s'" %p.symbol for p in self.state_variables))
 
-        print '  Inputs: [%s]'% ', '.join("'%s'" %p.symbol for p in self._supplied_lut)
+        print('  Inputs: [%s]'% ', '.join("'%s'" %p.symbol for p in self._supplied_lut))
 
-        print '  Outputs: [%s]'% ', '.join("'%s (%s)'" %(p.symbol, p.get_dimension()) for p in self.assignedvalues)
-        print '  ReducePorts: [%s] '% ', '.join("'%s (%s)'" % (p.symbol, p.get_dimension()) for p in self.analog_reduce_ports)
+        print('  Outputs: [%s]'% ', '.join("'%s (%s)'" %(p.symbol, p.get_dimension()) for p in self.assignedvalues))
+        print('  ReducePorts: [%s] '% ', '.join("'%s (%s)'" % (p.symbol, p.get_dimension()) for p in self.analog_reduce_ports))
 
-        print
+        print()
 
-        print
+        print()
 
-        print '  Time Derivatives:'
+        print('  Time Derivatives:')
 
         for td in self.timederivatives:
-            print '    %s -> ' % td.lhs.symbol
+            print('    %s -> ' % td.lhs.symbol)
 
-        print '  Assignments:'
+        print('  Assignments:')
         for td in self.assignments:
-            print '    %s -> ' % td.lhs.symbol
+            print('    %s -> ' % td.lhs.symbol)
 
-        print '  RT Graphs'
+        print('  RT Graphs')
         for rt in self.rt_graphs:
-            print '     Graph:', rt
+            print('     Graph:', rt)
             for regime in rt.regimes:
-                print '       Regime:', regime
+                print('       Regime:', regime)
 
                 for tr in self.transitions_from_regime(regime):
-                    print '          Transition:', tr
+                    print('          Transition:', tr)
 
     def get_initial_regimes(self, initial_regimes=None):
         if initial_regimes is None:
@@ -568,7 +568,7 @@ class NineMLComponent(Block):
         current_regimes = dict([(rt, None) for rt in rt_graphs])
 
         # ii. Is there just a single regime?
-        for (rt_graph, regime) in current_regimes.items():
+        for (rt_graph, regime) in list(current_regimes.items()):
             if len(rt_graph.regimes) == 1:
                 current_regimes[rt_graph] = rt_graph.regimes.get_single_obj_by()
 
@@ -578,13 +578,13 @@ class NineMLComponent(Block):
                 current_regimes[rt_graph] = rt_graph.default_regime
 
         # iv. Explicitly provided:
-        for (rt_name, regime_name) in initial_regimes.items():
+        for (rt_name, regime_name) in list(initial_regimes.items()):
             rt_graph = rt_graphs.get_single_obj_by(name=rt_name)
             assert current_regimes[rt_graph] is None, "Initial state for '%s' set twice " % rt_graph.name
             current_regimes[rt_graph]=rt_graph.get_regime(name=regime_name)
 
         # v. Check everything is hooked up OK:
-        for rt_graph, regime in current_regimes.items():
+        for rt_graph, regime in list(current_regimes.items()):
             assert regime is not None, " Start regime for '%s' not set! " % rt_graph.name
             assert regime in rt_graph.regimes, 'regime: %s [%s]' % (repr(regime), rt_graph.regimes)
 
@@ -602,7 +602,7 @@ class NineMLComponent(Block):
                 assert isinstance(sv.initial_value, ast.ConstValue)
                 state_values[sv.symbol] = sv.initial_value.value
 
-        for (k, v) in initial_state_values.items():
+        for (k, v) in list(initial_state_values.items()):
             assert not k in state_values, 'Double set intial values: %s' % k
             assert k in [td.lhs.symbol for td in self.timederivatives]
             state_values[k]= v
@@ -664,7 +664,7 @@ class NineMLComponent(Block):
         # Now, lets visit each of the new nodes, and replace (old->new) on it:
         # Build the mapping dictionary:
         mapping_dict = {}
-        for (old_repl, new_repl) in old_to_new_dict.items():
+        for (old_repl, new_repl) in list(old_to_new_dict.items()):
 
             if isinstance(old_repl, no_remap):
                 continue
@@ -672,7 +672,7 @@ class NineMLComponent(Block):
             mapping_dict[old_repl] = new_repl
 
         # Remap all the nodes:
-        for new_node in old_to_new_dict.values():
+        for new_node in list(old_to_new_dict.values()):
 
             node_mapping_dict = mapping_dict.copy()
             if new_node in node_mapping_dict:
@@ -704,14 +704,14 @@ class NineMLComponent(Block):
         shared_nodes_invalid = [sn for sn in shared_nodes if not isinstance(sn, no_remap)]
 
         if len(shared_nodes_invalid) != 0:
-            print 'Shared Nodes:'
-            print shared_nodes_invalid
+            print('Shared Nodes:')
+            print(shared_nodes_invalid)
             for s in shared_nodes_invalid:
-                print ' ', s, s in old_to_new_dict
-                print '  Referenced by:'
+                print(' ', s, s in old_to_new_dict)
+                print('  Referenced by:')
                 for c in connections_map_conns_to_objs[s]:
-                    print '    *', c
-                print
+                    print('    *', c)
+                print()
             assert len(shared_nodes_invalid) == 0
 
 

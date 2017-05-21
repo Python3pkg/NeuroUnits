@@ -27,8 +27,8 @@
 # -------------------------------------------------------------------------------
 
 
-import dIN_model
-import mn_model
-import rb_input_model
-import HH_model
-import gj_model
+from . import dIN_model
+from . import mn_model
+from . import rb_input_model
+from . import HH_model
+from . import gj_model

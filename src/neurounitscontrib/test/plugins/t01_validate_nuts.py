@@ -43,17 +43,17 @@ class TestNutsFiles(TestingPluginBase):
 
     def print_results(self):
         good_res, bad_res, error_res = self.results
-        print 'Good:'
+        print('Good:')
         for res in good_res:
-            print res
+            print(res)
 
-        print 'Bad:'
+        print('Bad:')
         for res in bad_res:
-            print res
+            print(res)
 
-        print 'Error:'
+        print('Error:')
         for res in error_res:
-            print res
+            print(res)
 
 
     def run(self, args):
@@ -64,7 +64,7 @@ class TestNutsFiles(TestingPluginBase):
 
 
         files = Locations.Test.get_nuts_fileobjs()
-        print 'Files:', files
+        print('Files:', files)
 
 
         good_results = []
@@ -74,8 +74,8 @@ class TestNutsFiles(TestingPluginBase):
             try:
                 res = NutsIO.validate(fname)
                 good_results.append((fname, res))
-            except Exception, e:
-                print 'Exception Raised'
+            except Exception as e:
+                print('Exception Raised')
                 error_results.append((fname, e))
 
 

@@ -84,7 +84,7 @@ class NeuroUnitParser(object):
 
         if hasattr(input_, 'read'):
             text = input_.read()
-        elif isinstance(input_, basestring):
+        elif isinstance(input_, str):
 
             # 1. Lets try and open the file (normal):
             if not text:
@@ -132,7 +132,7 @@ class NeuroUnitParser(object):
         import neurounits
 
 
-        if isinstance(s, basestring):
+        if isinstance(s, str):
             backend = backend or cls.get_defaultBackend()
             s = units_expr_yacc.parse_expr(s, parse_type=units_expr_yacc.ParseTypes.L6_ExprNode, working_dir=working_dir, backend=backend, options=options,)
             return s

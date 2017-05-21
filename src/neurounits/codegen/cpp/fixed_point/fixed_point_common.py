@@ -46,7 +46,7 @@ class CBasedFixedWriterStd(ASTVisitorBase):
 
     def VisitRegimeDispatchMap(self, o, **kwargs):
         assert len(o.rhs_map) == 1
-        return self.add_range_check(o, self.visit(o.rhs_map.values()[0], **kwargs))
+        return self.add_range_check(o, self.visit(list(o.rhs_map.values())[0], **kwargs))
 
 
     def DoOpOpComplex(self, o, op, **kwargs):
@@ -140,7 +140,7 @@ class CBasedFixedWriterStd(ASTVisitorBase):
         assert o.function_def.is_builtin() and o.function_def.funcname \
             == '__exp__'
 
-        param = o.parameters.values()[0]
+        param = list(o.parameters.values())[0]
         param_term = self.visit(param.rhs_ast, **kwargs)
         res = """ScalarOp<%d>::exp(%s)""" %(o.annotations['fixed-point-format'].upscale, param_term)
         return res
@@ -336,7 +336,7 @@ class CBasedFixedWriterBlueVecOps(ASTVisitorBase):
 
     def VisitRegimeDispatchMap(self, o, **kwargs):
         assert len(o.rhs_map) == 1
-        return self.visit(o.rhs_map.values()[0], **kwargs)
+        return self.visit(list(o.rhs_map.values())[0], **kwargs)
 
     def DoOpOpComplex(self, o, op, **kwargs):
 
@@ -417,7 +417,7 @@ class CBasedFixedWriterBlueVecOps(ASTVisitorBase):
     def VisitFunctionDefBuiltInInstantiation(self,o,  **kwargs):
         assert o.function_def.is_builtin() and o.function_def.funcname == '__exp__'
 
-        param = o.parameters.values()[0]
+        param = list(o.parameters.values())[0]
         param_term = self.visit(param.rhs_ast, **kwargs)
         res = """ %s<%d>::exp(%s)""" %(
                 self.op_scalar_op,

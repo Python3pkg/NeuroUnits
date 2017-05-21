@@ -30,8 +30,8 @@ plotting_info = {}
 f = pylab.figure()
 ax = f.add_subplot(111)
 
-for (is_lhs, cell_type), (saved_pop_name, start_index, ncells) in pop_breakdowns.items():
-    print 'Plotting: ', cell_type
+for (is_lhs, cell_type), (saved_pop_name, start_index, ncells) in list(pop_breakdowns.items()):
+    print('Plotting: ', cell_type)
     (pop_color, pop_y_index) = pop_info[cell_type]
 
     pop_y_pos = pop_y_index * (-1. if is_lhs else 1.) * 100.
@@ -59,5 +59,5 @@ ax.set_xlim(400, 2000)
 
 pylab.show()
 
-print 'Done'
+print('Done')
 

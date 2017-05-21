@@ -26,12 +26,12 @@
 # POSSIBILITY OF SUCH DAMAGE.
 # -------------------------------------------------------------------------------
 
-from astobjects import *
-from eqnset import Library, NineMLComponent
+from .astobjects import *
+from .eqnset import Library, NineMLComponent
 
-from astobjects_nineml import *
-from multiports import *
-from astobjects_randomvariables import *
+from .astobjects_nineml import *
+from .multiports import *
+from .astobjects_randomvariables import *
 
-from randomvariable_biftypes import *
-from function_biftypes import *
+from .randomvariable_biftypes import *
+from .function_biftypes import *

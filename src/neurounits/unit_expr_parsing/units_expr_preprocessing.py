@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from units_expr_parsetypes import ParseTypes
+from .units_expr_parsetypes import ParseTypes
 
 import re
 

@@ -81,4 +81,4 @@ test_lut(lut_address_size=10, lut_input_range_upscale=3,
 
 pylab.show()
 
-print 'Finsihed OK'
+print('Finsihed OK')

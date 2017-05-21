@@ -137,13 +137,13 @@ class ASTActionerDepthFirst(ASTVisitorBase):
 
     # Function Definitions:
     def VisitFunctionDefUser(self, o, **kwargs):
-        for p in o.parameters.values():
+        for p in list(o.parameters.values()):
             self.visit(p, **kwargs)
         self.visit(o.rhs, **kwargs)
         return self._ActionFunctionDefUser(o, **kwargs)
 
     def VisitFunctionDefBuiltIn(self, o, **kwargs):
-        for p in o.parameters.values():
+        for p in list(o.parameters.values()):
             self.visit(p, **kwargs)
         return self._ActionFunctionDefBuiltIn(o, **kwargs)
 
@@ -186,10 +186,10 @@ class ASTActionerDepthFirst(ASTVisitorBase):
         return self._ActionTimeDerivativeByRegime(o, **kwargs)
 
     def VisitRegimeDispatchMap(self, o, **kwargs):
-        for rhs in o.rhs_map.values():
+        for rhs in list(o.rhs_map.values()):
             self.visit(rhs, **kwargs)
 
-        for rhs in o.rhs_map.keys():
+        for rhs in list(o.rhs_map.keys()):
             self.visit(rhs, **kwargs)
 
         return self._ActionRegimeDispatchMap(o, **kwargs)
@@ -224,13 +224,13 @@ class ASTActionerDepthFirst(ASTVisitorBase):
         return self._ActionExpOp(o, **kwargs)
 
     def VisitFunctionDefBuiltInInstantiation(self, o, **kwargs):
-        for p in o.parameters.values():
+        for p in list(o.parameters.values()):
             self.visit(p, **kwargs)
         self.visit(o.function_def, **kwargs)
         return self._ActionFunctionDefBuiltInInstantiation(o, **kwargs)
 
     def VisitFunctionDefUserInstantiation(self, o, **kwargs):
-        for p in o.parameters.values():
+        for p in list(o.parameters.values()):
             self.visit(p, **kwargs)
         self.visit(o.function_def, **kwargs)
         return self._ActionFunctionDefUserInstantiation(o, **kwargs)
@@ -598,7 +598,7 @@ class ASTActionerDepthFirst(ASTVisitorBase):
         raise NotImplementedError()
 
     def ActionAnalogReducePort(self, o, **kwargs):
-        print 'self', self
+        print('self', self)
         raise NotImplementedError(self)
 
     def ActionTimeDerivativeByRegime(self, o, **kwargs):
@@ -661,7 +661,7 @@ class ASTActionerDepthFirst(ASTVisitorBase):
 
 
     def ActionCompoundPortConnectorWireMapping(self, o, **kwargs):
-        print self
+        print(self)
         raise NotImplementedError()
 
 

@@ -32,4 +32,4 @@ from .ast_symbol_dependancies_new import VisitorSymbolDependance
 
 from neurounits.visitors.common.function_expander import FunctionExpander
 
-from plot_networkx import ActionerPlotNetworkX
+from .plot_networkx import ActionerPlotNetworkX

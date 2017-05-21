@@ -1285,8 +1285,8 @@ precedence = (
     ('left', 'ALPHATOKEN'),
 )
 
-from units_expr_parsetypes import ParseTypes
-from units_expr_preprocessing import preprocess_string
+from .units_expr_parsetypes import ParseTypes
+from .units_expr_preprocessing import preprocess_string
 
 
 class ParseDetails(object):
@@ -1365,7 +1365,7 @@ def parse_expr(orig_text, parse_type, start_symbol=None, debug=False, backend=No
     try:
         logging.log_neurounits.info('Parsing with PLY: %s' % MLine(text))
         pRes, library_manager = parse_eqn_block(text, parse_type=parse_type, debug=debug, library_manager=library_manager)
-    except NeuroUnitParsingErrorUnexpectedToken, e:
+    except NeuroUnitParsingErrorUnexpectedToken as e:
         # Catch the exception, so that we can add more error handling to it:
         e.original_text = orig_text
         e.parsed_text = text
@@ -1407,7 +1407,7 @@ def parse_eqn_block(text_eqn, **kwargs):
     try:
         return _parse_eqn_block(text_eqn=text_eqn, **kwargs)
     except:
-        print 'Parsing:', text_eqn
+        print('Parsing:', text_eqn)
         raise
 
 

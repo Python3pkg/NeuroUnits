@@ -46,14 +46,14 @@ class Population(object):
         expected_params = set([p.symbol for p in  component.parameters])
         given_params = set(parameters.keys())
         if expected_params != given_params:
-            print 'Population was not instantiated with correct parameters:'
-            print 'Expected:', expected_params
-            print 'Given:', given_params
+            print('Population was not instantiated with correct parameters:')
+            print('Expected:', expected_params)
+            print('Given:', given_params)
             assert False
 
         # Remap all the parameters to nodes, and copy accross range/fixed-point information from the component:
-        self.parameters = { k: NeuroUnitParser._string_to_expr_node(v) for (k,v) in parameters.items() }
-        for k, v in self.parameters.items():
+        self.parameters = { k: NeuroUnitParser._string_to_expr_node(v) for (k,v) in list(parameters.items()) }
+        for k, v in list(self.parameters.items()):
             # Create a new node-id for the node:
             id_annotator = self.component.annotation_mgr._annotators['node-ids']
             id_annotator.visit(v)
@@ -145,7 +145,7 @@ class Projection(object):
 
 class FixedValue(object):
     def __init__(self, value):
-        if isinstance(value, basestring):
+        if isinstance(value, str):
             value = NeuroUnitParser.QuantitySimple(value)
         self.value=value
 
@@ -211,8 +211,8 @@ class _NodeTypes:
         if isinstance(obj, ast.SuppliedValue):
             return _NodeTypes.Input
 
-        print obj
-        print type(obj)
+        print(obj)
+        print(type(obj))
         assert False
 
 
@@ -229,16 +229,16 @@ class AnalogPortConnector(object):
 
         obj_lut = {_Objs.Src: src_population.component, _Objs.Dst: dst_population.component, _Objs.Connector: connection_object}
         for s1, s2 in port_map:
-            print
+            print()
 
             # Resolve 'conn.i' to objects:
-            print s1
+            print(s1)
             c1, S1 = _resolve_string(s1)
             C1 = obj_lut[c1]
             p1 = C1.get_terminal_obj(S1)
 
             # Resolve 'conn.i' to objects:
-            print s2
+            print(s2)
             c2, S2 = _resolve_string(s2)
             C2 = obj_lut[c2]
             p2 = C2.get_terminal_obj(S2)
@@ -259,8 +259,8 @@ class AnalogPortConnector(object):
         # Store the remaining variables:
         self.connector = connector
 
-        self.connection_properties = { k: NeuroUnitParser._string_to_expr_node(v) for (k,v) in connection_properties.items() }
-        for k, v in self.connection_properties.items():
+        self.connection_properties = { k: NeuroUnitParser._string_to_expr_node(v) for (k,v) in list(connection_properties.items()) }
+        for k, v in list(self.connection_properties.items()):
             # Create a new node-id for the node:
             id_annotator = self.connection_object.annotation_mgr._annotators['node-ids']
             id_annotator.visit(v)
@@ -335,7 +335,7 @@ class Network(object):
 
     def record_traces(self, subpopulations, terminal_node_names):
         assert not self.is_frozen
-        if isinstance(terminal_node_names, basestring):
+        if isinstance(terminal_node_names, str):
             terminal_node_names = terminal_node_names.split()
 
 
@@ -434,7 +434,7 @@ class Network(object):
         # Resolve all the connections:
         # Event Ports:
         for p in self.event_port_connectors:
-            for dst_param_name, src in p.parameter_map.items():
+            for dst_param_name, src in list(p.parameter_map.items()):
 
                 dst_param = p.dst_port.parameters.get_single_obj_by(symbol=dst_param_name)
                 assert isinstance(src, FixedValue)
@@ -454,7 +454,7 @@ class Network(object):
                 # Lets check that src_ports are always state-variables when then are from the populations, rather than
                 # assigned variables. Otherwise, these will require more work to implement.
                 src_comp, src_port, src_pop_str = src
-                print 'Checking:', src_comp.name, src_port
+                print('Checking:', src_comp.name, src_port)
                 if src_comp != apc.connection_object:
                     assert isinstance(src_port, ast.StateVariable)
 

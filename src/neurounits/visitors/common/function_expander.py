@@ -17,7 +17,7 @@ class _FunctionCloner(ASTVisitorBase):
 
         self.functiondef_instantiation = functiondef_instantiation
         self.params_old_to_new = {}
-        for sym, param_obj in functiondef_instantiation.parameters.items():
+        for sym, param_obj in list(functiondef_instantiation.parameters.items()):
             self.params_old_to_new[param_obj.get_function_def_parameter()] = param_obj.rhs_ast
 
 
@@ -30,7 +30,7 @@ class _FunctionCloner(ASTVisitorBase):
 
         params_new = {}
         # Clone the parameter objects:
-        for param_name, func_call_param in o.parameters.items():
+        for param_name, func_call_param in list(o.parameters.items()):
             pnew = ast.FunctionDefParameterInstantiation(
                                         rhs_ast=self.visit(func_call_param.rhs_ast),
                                         symbol=func_call_param.symbol,

@@ -47,14 +47,14 @@ class ReplaceNode(ASTVisitorBase):
         if srcObj in EqnsetVisitorNodeCollector(root).all():
 
             from .ast_node_connections import ASTAllConnections
-            print 'A node has not been completely removed: %s' % srcObj
-            print 'The following are still connected:'
+            print('A node has not been completely removed: %s' % srcObj)
+            print('The following are still connected:')
             for node in EqnsetVisitorNodeCollector(root).all():
                 conns = ASTAllConnections().visit(node)
                 if srcObj in conns:
-                    print '    node:', node
+                    print('    node:', node)
 
-            print 'OK'
+            print('OK')
 
 
 
@@ -182,7 +182,7 @@ class ReplaceNode(ASTVisitorBase):
 
     def VisitOnEvent(self, o, **kwargs):
         o.parameters = dict([(pName, self.replace_or_visit(p))
-                            for (pName, p) in o.parameters.iteritems()])
+                            for (pName, p) in o.parameters.items()])
         o.actions = [self.replace_or_visit(a, **kwargs) for a in
                      o.actions]
         return o
@@ -228,7 +228,7 @@ class ReplaceNode(ASTVisitorBase):
     # Function Definitions:
     def VisitFunctionDefUser(self, o, **kwargs):
         o.parameters = dict([(pName, self.replace_or_visit(p))
-                            for (pName, p) in o.parameters.iteritems()])
+                            for (pName, p) in o.parameters.items()])
         o.rhs = self.replace_or_visit(o.rhs)
         return o
 
@@ -291,7 +291,7 @@ class ReplaceNode(ASTVisitorBase):
         return o
 
     def VisitRegimeDispatchMap(self, o, **kwargs):
-        o.rhs_map = dict([(self.replace_or_visit(reg), self.replace_or_visit(rhs)) for (reg, rhs) in o.rhs_map.items()])
+        o.rhs_map = dict([(self.replace_or_visit(reg), self.replace_or_visit(rhs)) for (reg, rhs) in list(o.rhs_map.items())])
         return o
 
     def VisitEqnAssignmentByRegime(self, o, **kwargs):
@@ -324,11 +324,11 @@ class ReplaceNode(ASTVisitorBase):
         return o
 
     def VisitFunctionDefBuiltInInstantiation(self, o, **kwargs):
-        o.parameters = dict([(pName, self.replace_or_visit(p)) for (pName, p) in o.parameters.iteritems()])
+        o.parameters = dict([(pName, self.replace_or_visit(p)) for (pName, p) in o.parameters.items()])
         o.function_def = self.replace_or_visit(o.function_def)
         return o
     def VisitFunctionDefUserInstantiation(self, o, **kwargs):
-        o.parameters = dict([(pName, self.replace_or_visit(p)) for (pName, p) in o.parameters.iteritems()])
+        o.parameters = dict([(pName, self.replace_or_visit(p)) for (pName, p) in o.parameters.items()])
         o.function_def = self.replace_or_visit(o.function_def)
         return o
 

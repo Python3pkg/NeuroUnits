@@ -86,7 +86,7 @@ class _CloneFuncDef(ASTVisitorBase):
 
     def VisitFunctionDefUser(self, o, **kwargs):
         params = {}
-        for pName,pObj in o.parameters.iteritems():
+        for pName,pObj in o.parameters.items():
              p = ast.FunctionDefParameter(symbol=pObj.symbol, dimension = pObj.get_dimension() )
              params[pName] = p
              self.func_param_map[pObj] = p
@@ -147,7 +147,7 @@ class _CloneFuncDef(ASTVisitorBase):
         newDef = self.visit(o.function_def)
 
         params = {}
-        for (pName, pObj) in o.parameters.iteritems():
+        for (pName, pObj) in o.parameters.items():
             p = ast.FunctionDefParameterInstantiation(rhs_ast=self.visit(pObj.rhs_ast), symbol=pObj.symbol )
             p.set_function_def_parameter(newDef.parameters[pName])
             params[pName] = p
@@ -161,7 +161,7 @@ class _CloneFuncDef(ASTVisitorBase):
         newDef = self.visit(o.function_def)
 
         params = {}
-        for (pName, pObj) in o.parameters.iteritems():
+        for (pName, pObj) in o.parameters.items():
             p = ast.FunctionDefParameterInstantiation(rhs_ast=self.visit(pObj.rhs_ast), symbol=pObj.symbol )
             p.set_function_def_parameter(newDef.parameters[pName])
             params[pName] = p

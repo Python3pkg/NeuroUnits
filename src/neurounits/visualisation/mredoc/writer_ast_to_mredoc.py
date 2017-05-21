@@ -42,7 +42,7 @@ from neurounits.neurounitparser import NeuroUnitParser
 try:
     from mredoc import VerticalColTable, Figure, SectionNewPage, Section, EquationBlock, VerbatimBlock, Equation, Image, HierachyScope
 except ImportError:
-    print "Problem importing mredoc - you won't be able to make summary documents"
+    print("Problem importing mredoc - you won't be able to make summary documents")
 
 
 
@@ -123,9 +123,9 @@ class LatexEqnWriterN(ASTVisitorBase):
 
     def VisitRegimeDispatchMap(self, o, **kwargs):
         if len(o.rhs_map) == 1:
-            return self.visit(o.rhs_map.values()[0])
+            return self.visit(list(o.rhs_map.values())[0])
         else:
-            case_lines = [ '%s & if %s'%(reg, self.visit(rhs)) for (reg,rhs) in o.rhs_map.items() ]
+            case_lines = [ '%s & if %s'%(reg, self.visit(rhs)) for (reg,rhs) in list(o.rhs_map.items()) ]
             return r""" \begin{cases} %s \end{cases}""" % (r'\\'.join(case_lines))
 
 
@@ -141,7 +141,7 @@ class LatexEqnWriterN(ASTVisitorBase):
         ev_name = o.symbol.replace('_', '\\_')
 
         tr = '%s(%s) \\rightarrow ' % (ev_name,
-                ','.join(o.parameters.keys()))
+                ','.join(list(o.parameters.keys())))
         evts = '\\begin{cases}' + '\\\\'.join([self.visit(a) for a in
                 o.actions]) + '\\end{cases}'
         return Equation(tr + evts)
@@ -152,7 +152,7 @@ class LatexEqnWriterN(ASTVisitorBase):
 
     def VisitFunctionDefUser(self, o, **kwargs):
         return Equation('%s(%s) \\rightarrow %s' % (o.funcname,
-                        ','.join(o.parameters.keys()),
+                        ','.join(list(o.parameters.keys())),
                         self.visit(o.rhs)))
 
     def VisitFunctionDefParameter(self, o, **kwargs):
@@ -219,12 +219,12 @@ class LatexEqnWriterN(ASTVisitorBase):
         return '(NOT %s)' % self.visit(o.lhs)
 
     def VisitFunctionDefUserInstantiation(self, o, **kwargs):
-        p = [self.visit(p) for p in o.parameters.values()]
+        p = [self.visit(p) for p in list(o.parameters.values())]
         return '\\textrm{%s}(%s)' % (o.function_def.funcname.replace("_",r"\_"), ','.join(p))
 
     @include_id_in_overbrace
     def VisitFunctionDefBuiltInInstantiation(self, o, **kwargs):
-        p = [self.visit(p) for p in o.parameters.values()]
+        p = [self.visit(p) for p in list(o.parameters.values())]
         return '\\textrm{%s}(%s)' % (o.function_def.funcname.replace("_",r"\_"), ','.join(p))
 
     def VisitRandomVariable(self, o, **kwargs):
@@ -343,11 +343,11 @@ def build_figures(component):
         return [F]
 
 
-    states = set([k.split('_')[0] for k in plots.keys()])
+    states = set([k.split('_')[0] for k in list(plots.keys())])
 
     img_sets = []
     for s in states:
-        vs = [(k, v) for (k, v) in plots.iteritems() if k.split('_')[0] == s]
+        vs = [(k, v) for (k, v) in plots.items() if k.split('_')[0] == s]
         imgs = [Image(f[1]) for f in sorted(vs)]
         img_sets.append((imgs, s))
 

@@ -17,16 +17,16 @@ def subnodes_on_obj(obj, recurse_builtins=True):
     if isinstance(obj, list):
         return list(chain(*[subnodes_on_obj(o) for o in obj]))
     if isinstance(obj, dict):
-        ks = list(chain(*[subnodes_on_obj(k) for k in obj.keys()]))
-        vs = list(chain(*[subnodes_on_obj(v) for v in obj.values()]))
+        ks = list(chain(*[subnodes_on_obj(k) for k in list(obj.keys())]))
+        vs = list(chain(*[subnodes_on_obj(v) for v in list(obj.values())]))
         return ks + vs
-    if isinstance(obj, (int, float, basestring, NoneType)):
+    if isinstance(obj, (int, float, str, NoneType)):
         return []
 
     return [obj]
 
 def nodes_on_obj(obj, recurse_builtins=True):
-    vs = list(chain(*[subnodes_on_obj(v) for v in obj.__dict__.values()]))
+    vs = list(chain(*[subnodes_on_obj(v) for v in list(obj.__dict__.values())]))
     return vs
 
 
@@ -57,11 +57,11 @@ class ASTAllConnectionsCheck(ASTActionerDefault):
         nodes_found = nodes_on_obj(obj)
 
         if nodes_told is None:
-            print 'When visiting: %s' % obj
+            print('When visiting: %s' % obj)
             assert False, 'None found (told) %s'% obj
 
         if nodes_found is None:
-            print 'When visiting: %s' % obj
+            print('When visiting: %s' % obj)
             assert False, 'None found (found) %s'% obj
 
 
@@ -82,13 +82,13 @@ class ASTAllConnectionsCheck(ASTActionerDefault):
         nf = set(nodes_found)
 
         if nf != nt:
-            print 'ERROR!:'
-            print '======='
-            print 'Visiting:', obj
-            print 'Found not told:'
-            print nf-nt
-            print 'Told not found:'
-            print nt-nf
+            print('ERROR!:')
+            print('=======')
+            print('Visiting:', obj)
+            print('Found not told:')
+            print(nf-nt)
+            print('Told not found:')
+            print(nt-nf)
             assert False
 
 
@@ -163,13 +163,13 @@ class ASTAllConnections(ASTActionerDepthFirst):
 
     def VisitFunctionDefUser(self, o, **kwargs):
         return list(chain(
-            o.parameters.values(),
+            list(o.parameters.values()),
             [o.rhs]
             ))
 
 
     def VisitFunctionDefBuiltIn(self, o, **kwargs):
-        return o.parameters.values()
+        return list(o.parameters.values())
 
     def VisitFunctionDefParameter(self, o, **kwargs):
         return []
@@ -231,9 +231,9 @@ class ASTAllConnections(ASTActionerDepthFirst):
 
 
     def VisitFunctionDefUserInstantiation(self, o, **kwargs):
-        return list(chain([o.function_def], o.parameters.values()))
+        return list(chain([o.function_def], list(o.parameters.values())))
     def VisitFunctionDefBuiltInInstantiation(self, o, **kwargs):
-        return list(chain([o.function_def], o.parameters.values()))
+        return list(chain([o.function_def], list(o.parameters.values())))
 
     def VisitFunctionDefInstantiationParameter(self, o, **kwargs):
         return [o.rhs_ast, o._function_def_parameter]

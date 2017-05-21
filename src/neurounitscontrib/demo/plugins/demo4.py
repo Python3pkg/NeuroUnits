@@ -99,16 +99,16 @@ def test4():
     src_files =  [pkg_resources.resource_stream('neurounits',f) for f in neurounits.Locations.get_default_9ml_locations()]
     library_manager = neurounits.NeuroUnitParser.Parse9MLFiles(src_files)
 
-    print
-    print 'Available MultiportInterfaceDefs:'
+    print()
+    print('Available MultiportInterfaceDefs:')
     for comp in library_manager.interfaces:
-        print '  ',  repr(comp)
-    print
+        print('  ',  repr(comp))
+    print()
 
-    print 'Available Components:'
+    print('Available Components:')
     for comp in library_manager.components:
-        print '  ', repr(comp)
-    print
+        print('  ', repr(comp))
+    print()
 
 
 

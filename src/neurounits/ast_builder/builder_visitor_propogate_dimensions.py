@@ -56,8 +56,8 @@ class VerifyUnitsInTree(ASTActionerDepthFirst):
 
         try:
             self.visit(obj)
-        except UnitMismatchError, e:
-            print e
+        except UnitMismatchError as e:
+            print(e)
 
             def get_str(node):
                 if isinstance(node, ast.ASTExpressionObject):
@@ -91,8 +91,8 @@ class VerifyUnitsInTree(ASTActionerDepthFirst):
             assert isinstance(o, ASTExpressionObject)
             assert isinstance(o0, ASTExpressionObject)
             if not o.get_dimension().is_compatible(o0.get_dimension()):
-                print 'Units mismatch'
-                print o, o0
+                print('Units mismatch')
+                print(o, o0)
                 assert False, ' %s, %s (%s %s)' %(o, o0, o.get_dimension(), o0.get_dimension())
 
 
@@ -165,7 +165,7 @@ class VerifyUnitsInTree(ASTActionerDepthFirst):
         self.verify_equal_units([o.lhs, o.rhs_map])
 
     def ActionRegimeDispatchMap(self, o, **kwargs):
-        self.verify_equal_units([o] + o.rhs_map.values())
+        self.verify_equal_units([o] + list(o.rhs_map.values()))
 
     def ActionAddOp(self, o, **kwargs):
         self.verify_equal_units([o, o.lhs, o.rhs])
@@ -176,7 +176,7 @@ class VerifyUnitsInTree(ASTActionerDepthFirst):
     def ActionMulOp(self, o, **kwargs):
         try:
             (o.lhs.get_dimension() * o.rhs.get_dimension()).check_compatible(o.get_dimension())
-        except UnitMismatchError, e:
+        except UnitMismatchError as e:
             e.objA = o
             raise
 
@@ -314,7 +314,7 @@ class DimensionResolver(ASTVisitorBase):
         self.Initialise()
 
     def DumpUnitStateToHistoryAll(self):
-        for (obj, name) in self.obj_label_dict.iteritems():
+        for (obj, name) in self.obj_label_dict.items():
             if not isinstance(obj, ast.ASTExpressionObject):
                 continue
 
@@ -324,7 +324,7 @@ class DimensionResolver(ASTVisitorBase):
                                 obj_dimensionality, obj_unit))
 
     def DumpUnitStateToHistorySymbols(self):
-        for (obj, name) in self.obj_label_dict.iteritems():
+        for (obj, name) in self.obj_label_dict.items():
             if not isinstance(obj, ast.ASTExpressionObject):
                 continue
 
@@ -438,12 +438,12 @@ class DimensionResolver(ASTVisitorBase):
 
     def VisitRegimeDispatchMap(self, o, **kwargs):
 
-        if len([True for i in [o] +o.rhs_map.values() if i.is_dimension_known()]) == len(o.rhs_map) + 1:
+        if len([True for i in [o] +list(o.rhs_map.values()) if i.is_dimension_known()]) == len(o.rhs_map) + 1:
             return
-        if len([True for i in [o] +o.rhs_map.values() if i.is_dimension_known()]) == 0:
+        if len([True for i in [o] +list(o.rhs_map.values()) if i.is_dimension_known()]) == 0:
             return
 
-        for rhs in o.rhs_map.values():
+        for rhs in list(o.rhs_map.values()):
             if o.is_dimension_known() and not rhs.is_dimension_known():
                 self.RegisterDimensionPropogation(rhs, new_dimension=o.get_dimension(), reason='TD-Regime')
                 continue
@@ -512,7 +512,7 @@ class DimensionResolver(ASTVisitorBase):
 
     def VisitFunctionDefBuiltInInstantiation(self, o, **kwargs):
         # Check the parameters tie up:
-        for p in o.parameters.values():
+        for p in list(o.parameters.values()):
             self.EnsureEqualDimensions([p.rhs_ast, p])
             self.EnsureEqualDimensions([p, p._function_def_parameter])
             self.EnsureEqualDimensions([p.rhs_ast, p._function_def_parameter])
@@ -522,7 +522,7 @@ class DimensionResolver(ASTVisitorBase):
     def VisitFunctionDefUserInstantiation(self, o, **kwargs):
 
         # Check the parameters tie up:
-        for p in o.parameters.values():
+        for p in list(o.parameters.values()):
             self.EnsureEqualDimensions([p.rhs_ast, p])
             self.EnsureEqualDimensions([p, p._function_def_parameter])
             self.EnsureEqualDimensions([p.rhs_ast, p._function_def_parameter])
@@ -632,16 +632,16 @@ class PropogateDimensions(object):
         # Look for unresolved symbols:
         symbols_without_dimension = [s for s in all_symbols if isinstance(s, ast.ASTExpressionObject) and not s.is_dimension_known()]
         if symbols_without_dimension:
-            print 'Unable to resolve the dimensions of the following symbols:'
+            print('Unable to resolve the dimensions of the following symbols:')
             for s in symbols_without_dimension:
                 try:
-                    print '\tObj:', type(s), s,
-                    print '\t  -',
-                    print '\t', s.symbol
+                    print('\tObj:', type(s), s, end=' ')
+                    print('\t  -', end=' ')
+                    print('\t', s.symbol)
                 except:
                     pass
-                    print
-            print
+                    print()
+            print()
             assert False
 
         VerifyUnitsInTree(component, unknown_ok=False)

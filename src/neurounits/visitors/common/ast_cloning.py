@@ -32,7 +32,7 @@ class ASTClone(object):
 
 
     def clone_root(self, obj):
-        from ast_replace_node import ReplaceNode
+        from .ast_replace_node import ReplaceNode
 
         new_obj = None
         # Replace the nodes one at a time (set to prevent duplicates:

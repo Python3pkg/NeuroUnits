@@ -3035,7 +3035,7 @@ void record_input_event( IntType global_buffer, const SpikeEmission& evt )
 
 
 
-from fixed_point_common import  CBasedFixedWriter, CBasedFixedWriterBlueVecOps
+from .fixed_point_common import  CBasedFixedWriter, CBasedFixedWriterBlueVecOps
 
 import hdfjive
 
@@ -3131,7 +3131,7 @@ class CBasedEqnWriterFixedNetwork(object):
             pop.component.annotate_ast(fp_ann , ast_label='fixed-point-format-ann' )
 
             # And the parameters:
-            for pval in pop.parameters.values():
+            for pval in list(pop.parameters.values()):
                 fp_ann.visit(pval)
 
 
@@ -3144,7 +3144,7 @@ class CBasedEqnWriterFixedNetwork(object):
             #for ass in apc.connection_object.ordered_assignments_by_dependancies:
 
             # And the parameters:
-            for pval in apc.connection_properties.values():
+            for pval in list(apc.connection_properties.values()):
                 fp_ann.visit(pval)
 
 

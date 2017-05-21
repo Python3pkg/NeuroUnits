@@ -111,7 +111,7 @@ class ComponentLibrary(object):
 
         # 2. Is there a file cached with that name?
         expected_filename = os.path.join(cls._cache_dir, '%s_%s.pickle' % (component_name, kw_hash))
-        print expected_filename
+        print(expected_filename)
 
         if os.path.exists(expected_filename):
             with open(expected_filename) as f:
@@ -129,11 +129,11 @@ class ComponentLibrary(object):
             ignoredirs=[sys.prefix, sys.exec_prefix])
 
         # Build the component:
-        print 'Running functor'
-        print
+        print('Running functor')
+        print()
         component = trace_obj.runfunc(component_functor, **kwargs)
-        print 'Done running functor'
-        print
+        print('Done running functor')
+        print()
 
         # Lets have a look at what lines have been involved:
         _accessed_functions = {}
@@ -149,13 +149,13 @@ class ComponentLibrary(object):
                 _accessed_functions[filename] = []
             _accessed_functions[filename].append(linenumber)
 
-        for filename, linenumbers in sorted(_accessed_functions.iteritems()):
-            print filename, linenumbers
+        for filename, linenumbers in sorted(_accessed_functions.items()):
+            print(filename, linenumbers)
 
         cache_data = []
-        for (filename, linenumbers) in _accessed_functions.iteritems():
+        for (filename, linenumbers) in _accessed_functions.items():
             if filename == '<string>':
-                print 'Unexpected filename=<string> found. Lines: (%s)' % ','.join(str(l) for l in linenumbers)
+                print('Unexpected filename=<string> found. Lines: (%s)' % ','.join(str(l) for l in linenumbers))
                 continue
 
             cd = _CachedFileAccessData(filename=filename, linenumbers=linenumbers)

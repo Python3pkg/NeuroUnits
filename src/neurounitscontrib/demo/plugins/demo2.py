@@ -177,7 +177,7 @@ def simData():
     c_y_hat = res.assignments['C12_y_hat']
 
     for i in range( len(res.get_time())):
-        print 'Getting i:',i
+        print('Getting i:',i)
         yield times[i],x1s[i], y1s[i] , x2s[i], y2s[i], V1_t_x[i], V1_t_y[i], V1_c_x[i], V1_c_y[i], c_x_hat[i], c_y_hat[i]
 
 def simPoints(simData):
@@ -259,9 +259,9 @@ def test2():
                 }, 
             )
 
-    print res
-    print res.state_variables
-    print res.events
+    print(res)
+    print(res.state_variables)
+    print(res.events)
 
 
 
@@ -297,7 +297,7 @@ def test2():
     try:
         ani.save('myoutput.avi', fps=40, codec='ffv1')#extra_args=['-vcodec huffyuv']) # codec='ffv1')
     except:
-        print 'Unable to save video (issue with matplotlib)'
+        print('Unable to save video (issue with matplotlib)')
     #writer='ffmpeg',
 
 

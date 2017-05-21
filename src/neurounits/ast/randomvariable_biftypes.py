@@ -26,7 +26,7 @@
 # POSSIBILITY OF SUCH DAMAGE.
 # -------------------------------------------------------------------------------
 
-from astobjects_randomvariables import RandomVariable
+from .astobjects_randomvariables import RandomVariable
 
 
 class RandomVariableUniform(RandomVariable):

@@ -26,7 +26,7 @@
 # POSSIBILITY OF SUCH DAMAGE.
 # -------------------------------------------------------------------------------
 
-from astobjects import ASTObject, ASTExpressionObject
+from .astobjects import ASTObject, ASTExpressionObject
 from neurounits.units_misc import LookUpDict
 
 
@@ -349,7 +349,7 @@ class InEventPort(ASTObject):
         super(InEventPort, self).__init__(**kwargs)
         self.symbol = symbol
         self.parameters = parameters
-        assert isinstance(self.symbol, basestring)
+        assert isinstance(self.symbol, str)
         assert isinstance(self.parameters, LookUpDict)
 
     @property
@@ -382,7 +382,7 @@ class OutEventPort(ASTObject):
         super(OutEventPort, self).__init__(**kwargs)
         self.symbol = symbol
         self.parameters = parameters
-        assert isinstance(self.symbol, basestring)
+        assert isinstance(self.symbol, str)
         assert isinstance(self.parameters, LookUpDict)
 
     def _summarise_node_full(self):

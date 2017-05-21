@@ -80,7 +80,7 @@ class UnitTermParser(object):
 
         # Make a list of potential suffixes:
         potential_suffixes = []
-        for u,uv in units_dict.items():
+        for u,uv in list(units_dict.items()):
             if unitterm.endswith(u):
                 potential_suffixes.append((unitterm[:len(unitterm)-len(u)], u,uv))
         if not potential_suffixes:

@@ -81,7 +81,7 @@ class ASTVisitorBase(object):
         raise NotImplementedError()
 
     def VisitParameter(self, o, **kwargs):
-        print self, o
+        print(self, o)
         raise NotImplementedError()
 
     def VisitConstant(self, o, **kwargs):
@@ -118,19 +118,19 @@ class ASTVisitorBase(object):
         raise NotImplementedError()
 
     def VisitFunctionDefBuiltInInstantiation(self, o, **kwargs):
-        print self, o
+        print(self, o)
         raise NotImplementedError()
     def VisitFunctionDefUserInstantiation(self, o, **kwargs):
-        print self, o
+        print(self, o)
         raise NotImplementedError()
 
     def VisitFunctionDefInstantiationParameter(self, o, **kwargs):
-        print self, o
+        print(self, o)
         raise NotImplementedError()
     def VisitRandomVariable(self, o, **kwargs):
-        print self, o
+        print(self, o)
         raise NotImplementedError()
     def VisitRandomVariableParameter(self, o, **kwargs):
-        print self, o
+        print(self, o)
         raise NotImplementedError()
 

@@ -8,14 +8,14 @@ def _auto_plot(res):
 
 
     si_base_units = defaultdict(list)
-    plot_objs = sorted(list(itertools.chain(res.state_variables.keys(), res.assignments.keys(),)))
+    plot_objs = sorted(list(itertools.chain(list(res.state_variables.keys()), list(res.assignments.keys()),)))
     for plt_obj in plot_objs:
-        print plt_obj
+        print(plt_obj)
         terminal_obj = res.component.get_terminal_obj(plt_obj)
         dimension = terminal_obj.get_dimension()
 
         found = False
-        for k,v in si_base_units.items():
+        for k,v in list(si_base_units.items()):
             if k.is_compatible(dimension):
                 si_base_units[k].append(plt_obj)
                 found = True
@@ -25,8 +25,8 @@ def _auto_plot(res):
 
 
 
-    print si_base_units
-    print len(si_base_units)
+    print(si_base_units)
+    print(len(si_base_units))
     n_axes = len(si_base_units)
 
     f = pylab.figure()
@@ -63,7 +63,7 @@ class SimulationResultsData(object):
 
 
     def get_data(self, name):
-        assert isinstance(name, basestring)
+        assert isinstance(name, str)
         if name in self.state_variables:
             return self.state_variables[name]
         elif name in self.assignments:

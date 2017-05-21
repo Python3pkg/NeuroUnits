@@ -60,7 +60,7 @@ def dispatch_subnodes(node, dispatch_map):
         if n.tag in dispatch_map:
             dispatch_map[n.tag](n)
         else:
-            print ' -- ', n
+            print(' -- ', n)
             assert False
 
 
@@ -253,7 +253,7 @@ class ChannelMLInfo(object):
         dispatch_subnodes(node, tag_handlers)
 
     def __init__(self, chl_type_node, units):
-        print 'Loading Channel Type:', chl_type_node.get('name')
+        print('Loading Channel Type:', chl_type_node.get('name'))
 
         self.name = chl_type_node.get('name')
         self.parameters = {}

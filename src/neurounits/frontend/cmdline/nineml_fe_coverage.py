@@ -9,7 +9,7 @@ import shutil
 def do_coverage(args):
     from neurounitscontrib.test import do_test
     from neurounitscontrib.demo import do_demo
-    print 'Doing Coverage'
+    print('Doing Coverage')
 
     cov = coverage.coverage(include='*neurounits*')
     cov.start()
@@ -28,6 +28,6 @@ def do_coverage(args):
         os.makedirs(cov_dir)
     cov.html_report(directory=cov_dir)
 
-    print 'Coverage run finished, output in: ', cov_dir
+    print('Coverage run finished, output in: ', cov_dir)
 
 

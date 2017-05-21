@@ -94,7 +94,7 @@ class RunDialog(wx.Dialog):
 
 
     def DoRun(self, evt):
-        print 'RUNNNIGN!', self.component
+        print('RUNNNIGN!', self.component)
         res = component.simulate(times=numpy.arange(0,1.1,0.0001))
         neurounits.nineml.auto_plot(res)
         import pylab
@@ -159,7 +159,7 @@ class TabPanel1(wx.Panel):
 
 
         obj = self.tree.GetPyData(self.tree.GetSelection())
-        print obj
+        print(obj)
 
         menu = wx.Menu()
 
@@ -179,7 +179,7 @@ class TabPanel1(wx.Panel):
                     chgdep.Destroy()
 
                 elif evt.GetId() == other_id:
-                    print 'Somehting else!', obj
+                    print('Somehting else!', obj)
             self.Bind(wx.EVT_MENU, my_run)
 
 
@@ -357,7 +357,7 @@ class RHSPanelComponent(wx.Panel):
         self.list_ctrl_interfaces.DeleteAllItems()
 
         if component is None:
-            print 'No component found'
+            print('No component found')
             return
 
         # Set the name:
@@ -451,7 +451,7 @@ class MyFrame(wx.Frame):
         self.Centre()
 
     def change_obj(self, evt,):
-        print 'Section Changed (parent)'
+        print('Section Changed (parent)')
 
         tree = self.lhs.tabs[self.lhs.GetSelection()].tree
         obj = tree.GetPyData(tree.GetSelection())

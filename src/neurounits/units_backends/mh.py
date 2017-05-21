@@ -26,7 +26,7 @@
 # POSSIBILITY OF SUCH DAMAGE.
 # -------------------------------------------------------------------------------
 
-from bases import ParsingBackendBase
+from .bases import ParsingBackendBase
 from neurounits.errors import UnitMismatchError
 
 
@@ -128,7 +128,7 @@ class MMUnit(object):
     def detail_str(self):
         s1 = 'e%d' % self.powerTen
 
-        basis_short_LUT = dict(zip(MMUnit.Bases, MMUnit.BasesShort))
+        basis_short_LUT = dict(list(zip(MMUnit.Bases, MMUnit.BasesShort)))
         basisCounts = dict([(b, getattr(self, b)) for b in MMUnit.Bases])
 
         counts_per_base = [  (basis_short_LUT[b], basisCounts[b]) for b in MMUnit.Bases if basisCounts[b]]
@@ -170,7 +170,7 @@ class MMUnit(object):
         s1 = ('(10^{%d})' % self.powerTen if inc_powerten
               and self.powerTen else '')
 
-        basis_short_LUT = dict(zip(MMUnit.Bases, MMUnit.BasesShort))
+        basis_short_LUT = dict(list(zip(MMUnit.Bases, MMUnit.BasesShort)))
         basisCounts = dict([(b, getattr(self, b)) for b in
                            MMUnit.Bases])
         terms = ['%s^{%d}' % (basis_short_LUT[b], basisCounts[b])
@@ -263,7 +263,7 @@ class MMQuantity(object):
         if isinstance(rhs, MMUnit):
             rhs = MMQuantity(1.0, rhs)
         if not isinstance(rhs, MMQuantity):
-            print rhs
+            print(rhs)
         assert isinstance(rhs, MMQuantity)
         rhs_conv = rhs.rescale(self.unit)
         return MMQuantity(self.magnitude + rhs_conv.magnitude, self.unit)

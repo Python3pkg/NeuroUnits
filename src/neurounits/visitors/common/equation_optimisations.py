@@ -94,7 +94,7 @@ class ASTIsNodeConstant(ASTActionerDepthFirst):
 
     def ActionRegimeDispatchMap(self, o, **kwargs):
         assert len(o.rhs_map) == 1
-        self.const_value[o] = self.const_value[ o.rhs_map.values()[0] ]
+        self.const_value[o] = self.const_value[ list(o.rhs_map.values())[0] ]
 
 
     def ActionEqnAssignmentByRegime(self, o, **kwargs):
@@ -128,7 +128,7 @@ class ASTIsNodeConstant(ASTActionerDepthFirst):
         assert o.function_def.funcname in ['__exp__', '__ln__']
 
         # Are all of the parameters constants:
-        for p in o.parameters.values():
+        for p in list(o.parameters.values()):
             pres = self.visit(p.rhs_ast)
             if pres is None:
                 self.const_value[o] = None
@@ -331,7 +331,7 @@ class ReplaceWithOptimisedNodes(ASTVisitorBase):
 
 
     def VisitRegimeDispatchMap(self, o):
-        o.rhs_map = { p: self.replace_or_visit(v) for (p,v) in o.rhs_map.items() }
+        o.rhs_map = { p: self.replace_or_visit(v) for (p,v) in list(o.rhs_map.items()) }
 
 
     def _VisitBinOp(self, o):
@@ -368,7 +368,7 @@ class ReplaceWithOptimisedNodes(ASTVisitorBase):
         pass
 
     def VisitFunctionDefBuiltInInstantiation(self, o):
-        for p in o.parameters.values():
+        for p in list(o.parameters.values()):
             self.visit(p)
 
     def VisitFunctionDefInstantiationParameter(self, o):

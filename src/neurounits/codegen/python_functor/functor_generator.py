@@ -42,7 +42,7 @@ def with_number_check(func, src_obj):
     def my_func(*args, **kwargs):
 
         res = func(*args, **kwargs)
-        print 'Value of node:', repr(src_obj), res
+        print('Value of node:', repr(src_obj), res)
         return res
 
     return my_func
@@ -142,10 +142,10 @@ class FunctorGenerator(ASTVisitorBase):
 
         rt_graph = o.get_rt_graph()
 
-        rhs_functors = dict([(regime, self.visit(rhs)) for (regime,rhs) in o.rhs_map.items()])
+        rhs_functors = dict([(regime, self.visit(rhs)) for (regime,rhs) in list(o.rhs_map.items())])
 
         try:
-            default = SeqUtils.filter_expect_single(rhs_functors.keys(), lambda r:r.name == None)
+            default = SeqUtils.filter_expect_single(list(rhs_functors.keys()), lambda r:r.name == None)
             assert not None in rhs_functors
             rhs_functors[None] = rhs_functors[default]
         except ValueError:
@@ -223,11 +223,11 @@ class FunctorGenerator(ASTVisitorBase):
             def eFunc(state_data, func_params, **kw):
                 assert len(func_params) == 1
                 ParsingBackend = MHUnitBackend
-                return ParsingBackend.Quantity(float(functor((func_params.values()[0]).dimensionless())), ParsingBackend.Unit())
+                return ParsingBackend.Quantity(float(functor((list(func_params.values())[0]).dimensionless())), ParsingBackend.Unit())
         else:
             def eFunc(state_data, func_params, **kw):
                 assert len(kw) == 1
-                return float(functor(kw.values()[0]))
+                return float(functor(list(kw.values())[0]))
         return eFunc
 
     # ============
@@ -455,7 +455,7 @@ class FunctorGenerator(ASTVisitorBase):
             param_functors[p] = self.visit(o.parameters[p])
         func_call_functor = self.visit(o.function_def)
         def eFunc(**kw):
-            func_params_new = dict([(p, func(**kw)) for (p, func) in param_functors.iteritems()])
+            func_params_new = dict([(p, func(**kw)) for (p, func) in param_functors.items()])
             if 'func_params' in kw:
                 del kw['func_params']
             res = func_call_functor(func_params=func_params_new,**kw)
@@ -486,7 +486,7 @@ class FunctorGenerator(ASTVisitorBase):
     def VisitFunctionDefParameter(self, o, **kwargs):
         def eFunc(func_params, **kw):
             if not o.symbol in func_params:
-                print "Couldn't find %s in %s" % (o.symbol, func_params.keys())
+                print("Couldn't find %s in %s" % (o.symbol, list(func_params.keys())))
                 assert False
             return func_params[o.symbol]
         return eFunc
@@ -519,7 +519,7 @@ class FunctorGenerator(ASTVisitorBase):
             param_functors[p] = self.visit(p.rhs_ast)
         func_call_functor = o.accept_RVvisitor(self)
         def eFunc(**kw):
-            func_params_new = dict([(p.name, func(**kw)) for (p, func) in param_functors.iteritems()])
+            func_params_new = dict([(p.name, func(**kw)) for (p, func) in param_functors.items()])
             if 'func_params' in kw:
                 del kw['func_params']
             res = func_call_functor(**func_params_new)

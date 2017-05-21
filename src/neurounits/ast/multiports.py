@@ -26,7 +26,7 @@
 # POSSIBILITY OF SUCH DAMAGE.
 # -------------------------------------------------------------------------------
 
-import base
+from . import base
 from neurounits.units_misc import LookUpDict
 
 
@@ -57,7 +57,7 @@ class MultiportInterfaceDefWireContinuous(MultiportInterfaceDefWire):
         self.unit = unit
 
     def _summarise(self):
-        print '  ', self.DirCute[self.direction], self.symbol.ljust(5),  'Analog', self.unit, 'Optional:', self.optional
+        print('  ', self.DirCute[self.direction], self.symbol.ljust(5),  'Analog', self.unit, 'Optional:', self.optional)
 
     def accept_visitor(self, visitor, **kwargs):
         return visitor.VisitMultiportInterfaceDefWireContinuous(self, **kwargs)
@@ -68,7 +68,7 @@ class MultiportInterfaceDefWireEvent(MultiportInterfaceDefWire):
         self.parameters = parameters
 
     def _summarise(self):
-        print '  ', self.DirCute[self.direction], self.symbol.ljust(5),  'Event', ['%s:%s'%p for p in self.parameters ], 'Optional:', self.optional
+        print('  ', self.DirCute[self.direction], self.symbol.ljust(5),  'Event', ['%s:%s'%p for p in self.parameters ], 'Optional:', self.optional)
 
     def accept_visitor(self, visitor, **kwargs):
         return visitor.VisitMultiportInterfaceDefWireEvent(self, **kwargs)
@@ -94,11 +94,11 @@ class MultiportInterfaceDef(base.ASTObject):
         return self.symbol
 
     def summarise(self):
-        print
-        print 'Compound Port: %s' % self.symbol
+        print()
+        print('Compound Port: %s' % self.symbol)
         for conn in self.connections:
             conn._summarise()
-        print
+        print()
 
     def get_wire(self, wire_name):
         return self.connections.get_single_obj_by(symbol=wire_name)

@@ -75,7 +75,7 @@ class CFloatEval(ASTVisitorBase):
 
     def VisitRegimeDispatchMap(self, o, **kwargs):
         assert len(o.rhs_map) == 1
-        return self.visit(o.rhs_map.values()[0])
+        return self.visit(list(o.rhs_map.values())[0])
 
     def VisitAddOp(self, o, **kwargs):
         return '((%s) + (%s))' % (self.visit(o.lhs), self.visit(o.rhs))
@@ -148,7 +148,7 @@ class CFloatEval(ASTVisitorBase):
 
     def VisitFunctionDefBuiltInInstantiation(self, o, **kwargs):
         if o.function_def.funcname == '__exp__':
-            return 'exp(%s)' % self.visit(o.parameters.values()[0])
+            return 'exp(%s)' % self.visit(list(o.parameters.values())[0])
         assert False
 
     def VisitFunctionDefInstantiationParameter(self, o, **kwargs):
@@ -158,7 +158,7 @@ class CFloatEval(ASTVisitorBase):
         return 'input_data->%s' %  n.annotations['_range-finding-c-var-name']
 
     def VisitRandomVariableParameter(self, o, **kwargs):
-        print self, o
+        print(self, o)
         assert False, 'Added August 2014'
 
     def VisitOnEventDefParameter(self, o):
@@ -399,7 +399,7 @@ class NodeRangeByOptimiser(ASTVisitorBase, ASTTreeAnnotator):
 
     @classmethod
     def find_minmax_for_node(self, node, component, cffi_top, cffi_code_obj, critical_points):
-        print '.',
+        print('.', end=' ')
         sys.stdout.flush()
         deps = VisitorSymbolDependance(component)._get_dependancies(
                                                         node=node,
@@ -523,7 +523,7 @@ class NodeRangeByOptimiser(ASTVisitorBase, ASTTreeAnnotator):
             assert rv.functionname == 'uniform'
             min_param = rv.parameters.get_single_obj_by(name='min')
             max_param = rv.parameters.get_single_obj_by(name='max')
-            print 'Params', min_param.rhs_ast, max_param.rhs_ast
+            print('Params', min_param.rhs_ast, max_param.rhs_ast)
             min_val = min_param.rhs_ast.value.float_in_si()
             max_val = max_param.rhs_ast.value.float_in_si()
             rv.annotations['node-value-range'] = _NodeRangeFloat(
@@ -564,7 +564,7 @@ class NodeRangeByOptimiser(ASTVisitorBase, ASTTreeAnnotator):
         node_evaluator_c_code = NodeEvaluatorCCode(component)
         func_prototypes = []
         func_defs = []
-        for node, (node_name, node_code) in node_evaluator_c_code.node_code.items():
+        for node, (node_name, node_code) in list(node_evaluator_c_code.node_code.items()):
             func_sig = "double %s(InputData* input_data)" % (node_name)
             func_prototypes.append(func_sig + ';')
             func_defs.append(func_sig + '{ return %s; }' % node_code)
@@ -580,21 +580,21 @@ class NodeRangeByOptimiser(ASTVisitorBase, ASTTreeAnnotator):
 
         code = '\n'.join([input_ds] + func_defs)
 
-        print 'Compiling C-Code to find intermediate nodes:'
+        print('Compiling C-Code to find intermediate nodes:')
         with open('cffi_debug.c.log', 'w') as f:
             f.write(code)
 
         C = ffi.verify(code)
-        print 'OK'
+        print('OK')
 
         # 2. Evaluate for each node:
 
         # Find the critical points of the equations:
         critical_points = CriticalPointFinder(component).critical_points
 
-        print 'Evaluating all nodes in AST tree to find limits:'
+        print('Evaluating all nodes in AST tree to find limits:')
 
-        print 'Assignmnemts:',
+        print('Assignmnemts:', end=' ')
         for ass_var in component.assignedvalues:
             func_min, func_max = NodeRangeByOptimiser.find_minmax_for_node(node=ass_var, component=component, cffi_top=ffi, cffi_code_obj=C, critical_points=critical_points)
             ass_var.annotations['node-value-range'] = _NodeRangeFloat(min_=func_min, max_=func_max)
@@ -607,7 +607,7 @@ class NodeRangeByOptimiser(ASTVisitorBase, ASTTreeAnnotator):
 
                                 )
 
-        print 'Internal nodes:',
+        print('Internal nodes:', end=' ')
         ranges_nodes = [n for n in component.all_ast_nodes() if isinstance(n, required_nodes_types) ]
         for node in ranges_nodes:
 

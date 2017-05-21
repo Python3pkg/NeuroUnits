@@ -26,7 +26,7 @@
 # POSSIBILITY OF SUCH DAMAGE.
 # -------------------------------------------------------------------------------
 
-from astobjects import FunctionDefBuiltIn, FunctionDefParameter
+from .astobjects import FunctionDefBuiltIn, FunctionDefParameter
 
 
 class FunctionDefBuiltInSingleArg(FunctionDefBuiltIn):

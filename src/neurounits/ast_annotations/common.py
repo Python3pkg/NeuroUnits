@@ -50,9 +50,9 @@ class NodeRange(object):
     def __init__(self, min=None, max=None):
 
         from neurounits import NeuroUnitParser
-        if isinstance(min, basestring):
+        if isinstance(min, str):
             min = NeuroUnitParser.QuantitySimple(min)
-        if isinstance(max, basestring):
+        if isinstance(max, str):
             max = NeuroUnitParser.QuantitySimple(max)
 
         if min is not None and max is not None:

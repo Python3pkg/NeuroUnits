@@ -136,7 +136,7 @@ class ReduceConstants(ASTVisitorBase):
 
     def VisitRegimeDispatchMap(self, o, **kwargs):
         if len(o.rhs_map) == 1:
-            return self.visit(o.rhs_map.values()[0])
+            return self.visit(list(o.rhs_map.values())[0])
         return None
 
     # AST Objects:
@@ -180,7 +180,7 @@ class ReduceConstants(ASTVisitorBase):
         # Check if the parameters are constant
         assert False
         params = {}
-        for p in o.parameters.values():
+        for p in list(o.parameters.values()):
             pres = self.visit(p.rhs_ast)
             if pres is None:
                 return None
@@ -188,8 +188,8 @@ class ReduceConstants(ASTVisitorBase):
 
 
         # Not Implmented how to calculate it yet!
-        print 'We can evalute function:' , o.function_def.funcname
-        print 'BUT THE LOGIC IS MISSING :)'
+        print('We can evalute function:' , o.function_def.funcname)
+        print('BUT THE LOGIC IS MISSING :)')
         assert False
         return None
         raise NotImplementedError()
@@ -197,7 +197,7 @@ class ReduceConstants(ASTVisitorBase):
     def VisitFunctionDefUserInstantiation(self, o, **kwargs):
         # Check if the parameters are constant
         params = {}
-        for p in o.parameters.values():
+        for p in list(o.parameters.values()):
             pres = self.visit(p.rhs_ast)
             if pres is None:
                 return None
@@ -207,19 +207,19 @@ class ReduceConstants(ASTVisitorBase):
         if o.function_def.funcname== 'ln':
 
             assert len(params) == 1
-            p = params.values()[0].float_in_si()
+            p = list(params.values())[0].float_in_si()
             return MMQuantity(numpy.log(p), MMUnit())
 
 
         if o.function_def.funcname== 'exp':
             assert len(params) == 1
-            p = params.values()[0].float_in_si()
+            p = list(params.values())[0].float_in_si()
             return MMQuantity(numpy.exp(p), MMUnit())
 
 
         # Not Implmented how to calculate it yet!
-        print 'We can evalute function:' , o.function_def.funcname
-        print 'BUT THE LOGIC IS MISSING :)'
+        print('We can evalute function:' , o.function_def.funcname)
+        print('BUT THE LOGIC IS MISSING :)')
         return None
 
 

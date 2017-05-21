@@ -117,4 +117,4 @@ test_lut(lut_address_size=5, lut_input_range_upscale=3, input_range=(-6, 6), exp
 pylab.savefig("/home/mh735/hw/Cambridge2013/paper/generated/build/fig_newLUT.svg")
 pylab.show()
 
-print 'Finsihed OK'
+print('Finsihed OK')

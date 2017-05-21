@@ -168,11 +168,11 @@ class ActionerPlotNetworkX(object):
         graph = nx.DiGraph()
 
         connections = ActionerGetConnections(o).get_connections()
-        for node in connections.keys():
+        for node in list(connections.keys()):
             if type(node) in include_types:
                 graph.add_node(node, color='green', label='"%s"' % node.summarise_node_short(), penwidth=0.00001 )
 
-        for (node, connections) in connections.items():
+        for (node, connections) in list(connections.items()):
             for c in connections:
                 if type(node) in include_types and \
                    type(c) in include_types and \
@@ -228,7 +228,7 @@ class ActionerPlotNetworkX(object):
 
 
 
-        print 'Plotting!'
+        print('Plotting!')
         if not figure:
             plt.figure()
         nx.draw_graphviz(graph, font_size=8, iteration=200, node_color=colors, penwidth=0.001, scale=1, labels=label_dict )
@@ -291,7 +291,7 @@ class ActionerGetConnections(ASTActionerDefault):
 
 
     def ActionOnEvent(self, o, **kwargs):
-        self.connections[o].extend(o.parameters.values())
+        self.connections[o].extend(list(o.parameters.values()))
         self.connections[o].extend(o.actions)
 
     def ActionOnEventStateAssignment(self, o, **kwargs):
@@ -319,11 +319,11 @@ class ActionerGetConnections(ASTActionerDefault):
         self.connections[o].append(o.lhs)
 
     def ActionFunctionDefUser(self, o, **kwargs):
-        self.connections[o].extend(o.parameters.values())
+        self.connections[o].extend(list(o.parameters.values()))
         self.connections[o].append(o.rhs)
 
     def ActionFunctionDefBuiltIn(self, o, **kwargs):
-        self.connections[o].extend(o.parameters.values())
+        self.connections[o].extend(list(o.parameters.values()))
 
     def ActionFunctionDefParameter(self, o, **kwargs):
         pass
@@ -355,7 +355,7 @@ class ActionerGetConnections(ASTActionerDefault):
         self.connections[o].append(o.rhs_map)
 
     def ActionRegimeDispatchMap(self, o, **kwargs):
-        self.connections[o].extend(o.rhs_map.values())
+        self.connections[o].extend(list(o.rhs_map.values()))
 
     def ActionEqnAssignmentByRegime(self, o, **kwargs):
         self.connections[o].append(o.lhs)
@@ -381,10 +381,10 @@ class ActionerGetConnections(ASTActionerDefault):
         self.connections[o].append(o.lhs)
 
     def ActionFunctionDefUserInstantiation(self, o, **kwargs):
-        self.connections[o].extend(o.parameters.values())
+        self.connections[o].extend(list(o.parameters.values()))
         self.connections[o].append(o.function_def)
     def ActionFunctionDefBuiltInInstantiation(self, o, **kwargs):
-        self.connections[o].extend(o.parameters.values())
+        self.connections[o].extend(list(o.parameters.values()))
         self.connections[o].append(o.function_def)
 
     def ActionFunctionDefInstantiationParameter(self, o, **kwargs):

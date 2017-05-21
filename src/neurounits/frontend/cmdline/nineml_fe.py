@@ -8,7 +8,7 @@ import argparse
 
 
 def handle_simulate(args):
-    from neurounits.nineml_fe.nineml_fe_simulate import cmdline_simulate
+    from .neurounits.nineml_fe.nineml_fe_simulate import cmdline_simulate
     cmdline_simulate(args)
 
 
@@ -18,12 +18,12 @@ def handle_test(args):
 
 
 def handle_summarise(args):
-    from neurounits.nineml_fe.nineml_fe_summarise import cmdline_summarise
+    from .neurounits.nineml_fe.nineml_fe_summarise import cmdline_summarise
     cmdline_summarise(args)
 
 
 def handle_gui(args):
-    from neurounits.gui.ninegui import run_gui
+    from .neurounits.gui.ninegui import run_gui
     run_gui()
 
 
@@ -33,17 +33,17 @@ def handle_demo(args):
 
 
 def handle_coverage(args):
-    from nineml_fe_coverage import do_coverage
+    from .nineml_fe_coverage import do_coverage
     do_coverage(args)
 
 
 # TODO:
 def handle_visualise(args):
-    print 'Visualising'
+    print('Visualising')
 def handle_codegen(args):
-    print 'Code-generating'
+    print('Code-generating')
 def handle_validating(args):
-    print 'Code-validate'
+    print('Code-validate')
 
 
 def build_argparser():

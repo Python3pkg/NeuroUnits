@@ -1,1 +1,1 @@
-from writer_ast_to_mredoc import MRedocWriterVisitor
+from .writer_ast_to_mredoc import MRedocWriterVisitor

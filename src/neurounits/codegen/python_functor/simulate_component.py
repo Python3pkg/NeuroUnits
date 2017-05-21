@@ -121,11 +121,11 @@ def simulate_component(component, times, parameters=None, initial_state_values=N
     # Sort out the parameters and initial_state_variables:
     # =====================================================
     neurounits.Q1 = neurounits.NeuroUnitParser.QuantitySimple
-    parameters = dict((k, neurounits.Q1(v)) for (k,v) in parameters.items())
-    initial_state_values = dict((k, neurounits.Q1(v)) for (k, v) in initial_state_values.items())
+    parameters = dict((k, neurounits.Q1(v)) for (k,v) in list(parameters.items()))
+    initial_state_values = dict((k, neurounits.Q1(v)) for (k, v) in list(initial_state_values.items()))
 
     # Sanity check, are the parameters and initial state_variable values in the right units:
-    for (k, v) in parameters.items() + initial_state_values.items():
+    for (k, v) in list(parameters.items()) + list(initial_state_values.items()):
         terminal_obj = component.get_terminal_obj(k)
         assert terminal_obj.get_dimension().is_compatible(v.get_units())
     # =======================================================
@@ -152,17 +152,17 @@ def simulate_component(component, times, parameters=None, initial_state_values=N
     evt_manager = EventManager()
 
     reses_new = []
-    print 'Running Simulation:'
-    print
+    print('Running Simulation:')
+    print()
 
     for i in range(len(times) - 1):
 
         t = times[i]
         if verbose:
-            print 'Time:', t
-            print '---------'
-            print state_values
-        print '\rTime: %s' % str('%2.3f' % t).ljust(5),
+            print('Time:', t)
+            print('---------')
+            print(state_values)
+        print('\rTime: %s' % str('%2.3f' % t).ljust(5), end=' ')
         sys.stdout.flush()
 
         t_unit = t * one_second
@@ -191,7 +191,7 @@ def simulate_component(component, times, parameters=None, initial_state_values=N
             deltas[td.lhs.symbol] = res
 
         # Update the states:
-        for (d, dS) in deltas.items():
+        for (d, dS) in list(deltas.items()):
             assert d in state_values, "Found unexpected delta: %s " %(d)
             state_values[d] += dS * (times[i+1] - times[i])* one_second
 
@@ -216,7 +216,7 @@ def simulate_component(component, times, parameters=None, initial_state_values=N
                     if res:
                         triggered_transitions.append((transition,None, rt_graph))
                 elif isinstance(transition, ast.OnEventTransition):
-                    for (port,evt) in ports_with_events.items():
+                    for (port,evt) in list(ports_with_events.items()):
                         if transition in f.transition_port_handlers[port]:
                             triggered_transitions.append((transition, evt, rt_graph))
                 else:
@@ -263,8 +263,8 @@ def simulate_component(component, times, parameters=None, initial_state_values=N
         states_data = [time_pt_data.states_in[state_name].float_in_si() for time_pt_data in reses_new]
         states_data = np.array(states_data)
         state_data_dict[state_name] = states_data
-        print 'State:', state_name
-        print '  (Min:', np.min(states_data), ', Max:', np.max(states_data), ')'
+        print('State:', state_name)
+        print('  (Min:', np.min(states_data), ', Max:', np.max(states_data), ')')
 
     # C. Assigned Values:
 
@@ -273,20 +273,20 @@ def simulate_component(component, times, parameters=None, initial_state_values=N
     for ass in component.assignedvalues:
         ass_res = []
         for time_pt_data in reses_new:
-            print "\r%s %2.3f" % (ass.symbol, time_pt_data.suppliedvalues['t'].float_in_si()),
+            print("\r%s %2.3f" % (ass.symbol, time_pt_data.suppliedvalues['t'].float_in_si()), end=' ')
             td_eval = f.assignment_evaluators[ass.symbol]
             res = td_eval(state_data=time_pt_data)
             ass_res.append(res.float_in_si())
         assignments[ass.symbol] = np.array(ass_res)
-        print
-        print '  (Min:', np.min(assignments[ass.symbol]), ', Max:', np.max(assignments[ass.symbol]), ')'
+        print()
+        print('  (Min:', np.min(assignments[ass.symbol]), ', Max:', np.max(assignments[ass.symbol]), ')')
 
 
     # D. RT-gragh Regimes:
     # Build a dictionary mapping regimes -> Regimes, to make plotting easier:
     regimes_to_ints_map = {}
     for rt_graph in component.rt_graphs:
-        regimes_to_ints_map[rt_graph] = dict(zip( iter(rt_graph.regimes),range(len(rt_graph.regimes)),))
+        regimes_to_ints_map[rt_graph] = dict(list(zip( iter(rt_graph.regimes),list(range(len(rt_graph.regimes))),)))
 
     rt_graph_data = {}
     for rt_graph in component.rt_graphs:
@@ -297,7 +297,7 @@ def simulate_component(component, times, parameters=None, initial_state_values=N
 
     # Print the events:
     for evt in evt_manager.processed_event_list:
-        print evt
+        print(evt)
 
     # Hook it all up:
 

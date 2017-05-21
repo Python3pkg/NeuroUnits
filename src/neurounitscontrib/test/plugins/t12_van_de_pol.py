@@ -41,8 +41,8 @@ class TestRunLorenz(TestingPluginBase):
         return 'Test van de Pol'
 
     def print_results(self):
-        print 'Results:'
+        print('Results:')
 
 
     def run(self, args):
-        print 'Running Van de pol system'
+        print('Running Van de pol system')

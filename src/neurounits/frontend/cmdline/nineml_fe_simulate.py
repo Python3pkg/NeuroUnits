@@ -15,12 +15,12 @@ def resolve_filename_interpolation(src_name, output):
 
 def cmdline_simulate(args):
 
-    print 'Simulating'
-    for (arg, arg_value) in vars(args).items():
-        print arg, arg_value
+    print('Simulating')
+    for (arg, arg_value) in list(vars(args).items()):
+        print(arg, arg_value)
 
-    from neurounits import NeuroUnitParser, MQ1
-    import neurounits
+    from .neurounits import NeuroUnitParser, MQ1
+    from . import neurounits
     import pkg_resources
 
     src_files =  [pkg_resources.resource_stream('neurounits', f) for f in neurounits.Locations.get_default_9ml_locations()]
@@ -42,9 +42,9 @@ def cmdline_simulate(args):
     # OK lets simulate!
     res = component.simulate(times=np.arange(0, t_end, dt))
 
-    print 'Simulating'
-    for (arg, arg_value) in vars(args).items():
-        print arg, arg_value
+    print('Simulating')
+    for (arg, arg_value) in list(vars(args).items()):
+        print(arg, arg_value)
 
     # and plot:
     res.auto_plot()
@@ -53,8 +53,8 @@ def cmdline_simulate(args):
     if args.show_plot:
         pylab.show()
 
-    print 'Simulating'
-    for (arg, arg_value) in vars(args).items():
-        print arg, arg_value
+    print('Simulating')
+    for (arg, arg_value) in list(vars(args).items()):
+        print(arg, arg_value)
 
 

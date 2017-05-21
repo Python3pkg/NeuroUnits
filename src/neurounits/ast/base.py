@@ -59,7 +59,7 @@ class ASTObject(object):
 
     def summarise_node_full(self):
         try:
-            print type(self)
+            print(type(self))
             return self._summarise_node_full()
         except NotImplementedError:
             return '[??]'
@@ -68,15 +68,15 @@ class ASTObject(object):
         try:
             return self._summarise_node_short()
         except NotImplementedError:
-            print self
+            print(self)
             assert False
             return '[??]'
 
     def __str__(self):
-        return unicode(self)
+        return str(self)
 
     def __repr__(self):
-        return unicode(self)
+        return str(self)
 
     def __unicode__(self):
         return string.Template('<${class_name} [id:${id}] ${node_data} ${annotation_data}>').substitute(

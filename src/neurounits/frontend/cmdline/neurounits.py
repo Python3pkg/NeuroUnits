@@ -6,7 +6,7 @@
 
 import argparse
 from itertools import chain
-import StringIO
+import io
 
 
 def build_parser():
@@ -21,20 +21,20 @@ def build_parser():
 
 
 def validate_eqn(filename):
-    from neurounits import NeuroUnitParser
-    print 'Validating:', filename
+    from .neurounits import NeuroUnitParser
+    print('Validating:', filename)
     f = NeuroUnitParser.File(open(filename).read())
-    print '  ', f.summary()
+    print('  ', f.summary())
 
 
 def validate_nuts(filename):
-    from neurounits import NutsIO
+    from .neurounits import NutsIO
     NutsIO.validate(filename)
-    print 'Validating:', filename
+    print('Validating:', filename)
 
 
 def extract(filenames, level, output_file):
-    from neurounits import NutsIO
+    from .neurounits import NutsIO
 
     lines = list(chain(*[NutsIO.load(fname) for fname in filenames]))
 
@@ -48,26 +48,26 @@ def extract(filenames, level, output_file):
         output_file = output_file[0]
         f = open(output_file, 'w')
     else:
-        f = StringIO.StringIO()
+        f = io.StringIO()
 
     # Write the output
     for line in lines:
         op = line.line + '\n'
-        print op
+        print(op)
         f.write(op)
 
-    print 'Level', level
-    print lines
-    print 'Extracting:'
+    print('Level', level)
+    print(lines)
+    print('Extracting:')
 
 
 def main():
     parser = build_parser()
     args = parser.parse_args()
 
-    print args.files
-    print 'validate', args.validate
-    print 'extract', args.extract
+    print(args.files)
+    print('validate', args.validate)
+    print('extract', args.extract)
 
     # Validation:
     if args.validate:

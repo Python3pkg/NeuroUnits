@@ -150,7 +150,7 @@ class AssignmentWriter(ASTActionerDefaultIgnoreMissing):
         # For some sanity checking, make sure that we have met all the dependancies of every line:
         resolved_deps = set(args )
         for ass in component.ordered_assignments_by_dependancies:
-            print 'Writing assignment for: ', ass
+            print('Writing assignment for: ', ass)
             # Check dependancies:
             for dep in component.getSymbolDependancicesDirect(ass, include_parameters=False):
                 assert dep in resolved_deps
@@ -222,7 +222,7 @@ class FunctionWriter(ASTActionerDefaultIgnoreMissing):
             }"""
 
         func_def = string.Template(func_def_tmpl).substitute({'func_name':  o.funcname.replace(".","__"),
-                                                               'func_params': ",".join([ p.symbol for p in o.parameters.values()] ),
+                                                               'func_params': ",".join([ p.symbol for p in list(o.parameters.values())] ),
                                                                'result_string': CStringWriter.Build(o.rhs, build_parameters=build_parameters, expand_assignments=False  ),
                                                                'func_unit': "",
                                                                 }  )
@@ -243,7 +243,7 @@ class OnEventWriter(ASTActionerDefaultIgnoreMissing):
 
         # And lets hope there is only one transition triggered off that
         # port ;)
-        print build_parameters
+        print(build_parameters)
         component = build_parameters.component
         evt_trans = [tr for tr in component._transitions_events if tr.port == o]
         assert len(evt_trans) == 1
@@ -277,7 +277,7 @@ class NeuronBlockWriter(object):
 
 
            # Currents:
-        for currentSymbol, neuronCurrentObj in build_parameters.currents.iteritems():
+        for currentSymbol, neuronCurrentObj in build_parameters.currents.items():
             modfilecontents.section_NEURON.append("NONSPECIFIC_CURRENT %s" %currentSymbol.symbol )
 
 
@@ -361,7 +361,7 @@ class CStringWriter(ASTVisitorBase):
                 symbol = 'v'
 
         # Term should be in base SI units:
-        print n.symbol, type(n)
+        print(n.symbol, type(n))
 
         if n.get_dimensionality() == self.build_parameters.symbol_units[n]:
             return symbol
@@ -410,7 +410,7 @@ class CStringWriter(ASTVisitorBase):
 
     def VisitRegimeDispatchMap(self, o, **kwargs):
         assert len(o.rhs_map) == 1
-        return self.visit(o.rhs_map.values()[0] )
+        return self.visit(list(o.rhs_map.values())[0] )
 
 
     def VisitEqnAssignmentByRegime(self, o, **kwargs):
@@ -458,7 +458,7 @@ class CStringWriter(ASTVisitorBase):
     def _VisitFunctionDefInstantiation(self, o, **kwargs):
         import neurounits
         if isinstance(o.function_def, neurounits.ast.astobjects.FunctionDefBuiltIn):
-            print o.function_def.funcname
+            print(o.function_def.funcname)
 
             if o.function_def.funcname == "__pow__":
                 p0_rhs = self.visit(o.parameters['base'].rhs_ast)
@@ -469,14 +469,14 @@ class CStringWriter(ASTVisitorBase):
 
             else:
                 assert len(o.parameters) == 1
-                p0_rhs = self.visit(o.parameters.values()[0].rhs_ast)
+                p0_rhs = self.visit(list(o.parameters.values())[0].rhs_ast)
                 r = "%s(%s)"%(o.function_def.funcname.replace("__",""), p0_rhs )
                 return r
 
 
         elif type(o.function_def) == neurounits.ast.astobjects.FunctionDefUser:
-            print 'T',  [ type(p.rhs_ast) for p in o.parameters.values()]
-            params = ",".join(self.visit(p.rhs_ast) for p in o.parameters.values()  )
+            print('T',  [ type(p.rhs_ast) for p in list(o.parameters.values())])
+            params = ",".join(self.visit(p.rhs_ast) for p in list(o.parameters.values())  )
             func_call = "%s(%s)"%(o.function_def.funcname.replace(".","__"), params)
             return func_call
         else:

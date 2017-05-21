@@ -65,16 +65,16 @@ class NutsIO(object):
 
     @classmethod
     def validate(cls, filename):
-        print 'Checking nuts files', filename
+        print('Checking nuts files', filename)
         nuts_lines = cls.load(filename)
 
         for ln in nuts_lines:
-            print 'Validating:', ln.line
+            print('Validating:', ln.line)
             res = ln.validate()
             if not res:
                 raise NutsIOValidationError('NUTS Validation failed: %s' % ln.line)
 
-        print len(nuts_lines)
+        print(len(nuts_lines))
 
 
 
@@ -92,13 +92,13 @@ class NutsOptions():
         }
 
     def __init__(self):
-        for (k, v) in NutsOptions.valid_attrs.items():
+        for (k, v) in list(NutsOptions.valid_attrs.items()):
             setattr(self, k, v)
 
     def update(self, line):
         line = line.replace("'", '"')
         new_options = json.loads(line)
-        for (k, v) in new_options.items():
+        for (k, v) in list(new_options.items()):
             assert k in NutsOptions.valid_attrs, 'Invalid option: %s' % k
             setattr(self, k, v)
 
@@ -168,8 +168,8 @@ class NutsIOLine(object):
             toks = self.line.split('==')
 
             for t in toks[1:]:
-                print ' -- Checking: %s == %s' % tuple([toks[0], t])
-                print self.options.__dict__
+                print(' -- Checking: %s == %s' % tuple([toks[0], t]))
+                print(self.options.__dict__)
                 are_equal = comp_func(
                         parse_func(toks[0]),
                         parse_func(t),
@@ -182,7 +182,7 @@ class NutsIOLine(object):
         if '!=' in self.line:
             toks = self.line.split('!=')
             assert len(toks) == 2
-            print ' -- Checking: %s != %s' % tuple(toks)
+            print(' -- Checking: %s != %s' % tuple(toks))
             are_equal = comp_func(parse_func(toks[0]),
                                   parse_func(toks[1]))
             if are_equal:
@@ -202,12 +202,12 @@ class NutsIOLine(object):
         comp_func = comp_func_lut[self.options.type]
         for tok in self.line.split(','):
             try:
-                print ' -- Checking: %s is invalid' % tok
+                print(' -- Checking: %s is invalid' % tok)
                 parse_func(tok)
                 # An exception should be raised, so we shouldn't get here:!
                 return False
-            except Exception, e:
-                print ' -- Exception raised (OK)!', e
+            except Exception as e:
+                print(' -- Exception raised (OK)!', e)
                 pass
         return True
 

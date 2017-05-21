@@ -43,7 +43,7 @@ class EqnsetVisitorNodeCollector(ASTActionerDefault):
 
 
     def all(self):
-        return itertools.chain(*self.nodes.values())
+        return itertools.chain(*list(self.nodes.values()))
 
     def ActionNode(self, n):
         N = type(n)

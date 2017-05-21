@@ -41,7 +41,7 @@ class ChannelMLReader:
 
     @classmethod
     def LoadChlRaw(self, filename):
-        chl_infos = ChannelMLReader.LoadChlsRaw(filename).values()
+        chl_infos = list(ChannelMLReader.LoadChlsRaw(filename).values())
         if len(chl_infos) == 0:
             raise NeuroMLFileContainsNoChannels()
         if len(chl_infos) > 1:

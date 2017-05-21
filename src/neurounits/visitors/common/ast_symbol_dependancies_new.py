@@ -141,9 +141,9 @@ class VisitorSymbolDependance(object):
                     else:
                         if isinstance(ass_dep, ast.RTBlock):
                                 continue
-                        print
-                        print ass_dep
-                        print
+                        print()
+                        print(ass_dep)
+                        print()
                         assert False
 
             dependancies = dependancies_statevars
@@ -184,11 +184,11 @@ class VisitorSymbolDependance(object):
         dep_find.visit(component)
 
         g = nx.DiGraph()
-        all_objs = set(list(chain(*dep_find.dependancies.values()))  + dep_find.dependancies.keys() )
+        all_objs = set(list(chain(*list(dep_find.dependancies.values())))  + list(dep_find.dependancies.keys()) )
         for o in all_objs:
             g.add_node(o)
 
-        for k,v in dep_find.dependancies.items():
+        for k,v in list(dep_find.dependancies.items()):
             for c in v:
                 g.add_edge(k, c)
 
@@ -330,7 +330,7 @@ class _DependancyFinder(ASTVisitorBase):
     @save_deps_for_node
     def VisitRegimeDispatchMap(self, o, **kwargs):
         symbols = []
-        for rhs in o.rhs_map.values():
+        for rhs in list(o.rhs_map.values()):
             symbols.extend(self.visit(rhs, **kwargs))
         # The RT graph is only a dependance if there is more than one possibility!
         return symbols + ([o.get_rt_graph()] if len(o.rhs_map) > 1 else [] )
@@ -390,11 +390,11 @@ class _DependancyFinder(ASTVisitorBase):
 
     @save_deps_for_node
     def VisitFunctionDefBuiltInInstantiation(self, o, **kwargs):
-        return list(itertools.chain(*[self.visit(p) for p in o.parameters.values()]))
+        return list(itertools.chain(*[self.visit(p) for p in list(o.parameters.values())]))
 
     @save_deps_for_node
     def VisitFunctionDefUserInstantiation(self, o, **kwargs):
-        return list(itertools.chain(*[self.visit(p) for p in o.parameters.values()]))
+        return list(itertools.chain(*[self.visit(p) for p in list(o.parameters.values())]))
 
     @save_deps_for_node
     def VisitFunctionDefInstantiationParameter(self, o, **kwargs):

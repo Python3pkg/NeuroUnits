@@ -170,9 +170,9 @@ class MODLBuildParameters(object):
 
 
         for obj in component.state_variables + component.assignedvalues:
-            print 'Output', obj
+            print('Output', obj)
             metadata = obj._metadata
-            print metadata
+            print(metadata)
             if not metadata or not 'mf' in metadata or not 'role' in metadata['mf']:
                 continue
             role = metadata['mf']['role']
@@ -183,9 +183,9 @@ class MODLBuildParameters(object):
                 assert False, 'Unknown role: %s' % role
 
         for obj in component.suppliedvalues:
-            print 'input', obj
+            print('input', obj)
             metadata = obj._metadata
-            print metadata
+            print(metadata)
             if not metadata or not 'mf' in metadata or not 'role' in metadata['mf']:
                 continue
             role = metadata['mf']['role']
@@ -208,8 +208,8 @@ class MODLBuildParameters(object):
             raise ValueError('Mechanism does not expose any currents! %s'% component.name)
 
         # PointProcess or Distributed  Process:
-        mech_type = currents.values()[0].getCurrentType()
-        for c in currents.values():
+        mech_type = list(currents.values())[0].getCurrentType()
+        for c in list(currents.values()):
             assert mech_type == c.getCurrentType(),  'Mixed Current types [Distributed/Point]'
 
 
@@ -230,7 +230,7 @@ class MODLBuildParameters(object):
                 if t in NeuronSuppliedValues.All:
                     symbol_units[s] = NEURONMappings.supplied_value_units[t]  #NeuroUnitParser.Unit("mV")
                 else:
-                    print 'Unknown supplied value:', t
+                    print('Unknown supplied value:', t)
                     assert False
             else:
 

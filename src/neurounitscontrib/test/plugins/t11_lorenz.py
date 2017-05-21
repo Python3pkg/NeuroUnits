@@ -40,8 +40,8 @@ class TestRunLorenz(TestingPluginBase):
         return 'Test Lorenz'
 
     def print_results(self):
-        print 'Results:'
+        print('Results:')
 
 
     def run(self, args):
-        print 'Running Lorenz system'
+        print('Running Lorenz system')

@@ -82,13 +82,13 @@ class Scope(object):
         self.proxy_if_absent = proxy_if_absent
 
     def getSymbolOrProxy(self, symbol):
-        assert isinstance(symbol, basestring)
+        assert isinstance(symbol, str)
         if not symbol in self.symbol_dict:
             self.symbol_dict[symbol] = SymbolProxy()
         return self.symbol_dict[symbol]
 
     def getSymbol(self, symbol):
-        assert isinstance(symbol, basestring)
+        assert isinstance(symbol, str)
         if not symbol in self.symbol_dict:
             raise KeyError('Symbol not in scope: %s' % symbol)
         return self.symbol_dict[symbol]
@@ -97,18 +97,18 @@ class Scope(object):
         return symbol in self.symbol_dict
 
     def iteritems(self):
-        return self.symbol_dict.iteritems()
+        return iter(self.symbol_dict.items())
 
     def __getitem__(self, symbol):
-        assert isinstance(symbol, basestring)
+        assert isinstance(symbol, str)
         return self.symbol_dict[symbol]
 
     def __setitem__(self, symbol, value):
-        assert isinstance(symbol, basestring)
+        assert isinstance(symbol, str)
         self.symbol_dict[symbol] = value
 
     def get_proxy_targetname(self, symproxy):
-        posses = [(k, v) for (k, v) in self.symbol_dict.items() if v==symproxy]
+        posses = [(k, v) for (k, v) in list(self.symbol_dict.items()) if v==symproxy]
         assert len(posses) == 1
         return posses[0][0]
 
@@ -328,7 +328,7 @@ class AbstractBlockBuilder(object):
         # be proxy-objects.
         # In the case of a library, we can also access global constants:
 
-        for (symbol, proxy) in self.active_scope.iteritems():
+        for (symbol, proxy) in self.active_scope.items():
 
             # If we are in a library, then it is OK to lookup symbols
             # in the global namespace, since they will be constants.
@@ -355,7 +355,7 @@ class AbstractBlockBuilder(object):
         self.active_scope = None
 
         # Resolve the symbols in the namespace
-        for (sym, obj) in scope.iteritems():
+        for (sym, obj) in scope.items():
             # Resolve Symbol from the Event Parameters:
             if sym in event_params.get_objects_attibutes(attr='symbol'):
                 obj.set_target(event_params.get_single_obj_by(symbol=sym))#event_params[sym])
@@ -463,19 +463,19 @@ class AbstractBlockBuilder(object):
         for regime_td in self.builddata._time_derivatives_per_regime:
             maps_tds[regime_td.lhs][regime_td.regime] = regime_td.rhs
 
-        for (sv, tds) in maps_tds.items():
+        for (sv, tds) in list(maps_tds.items()):
 
             statevar_obj = ast.StateVariable(symbol=sv)
             self._resolve_global_symbol(sv, statevar_obj)
 
-            mapping = dict([(reg, rhs) for (reg, rhs) in tds.items()])
+            mapping = dict([(reg, rhs) for (reg, rhs) in list(tds.items())])
             rhs = ast.EqnTimeDerivativeByRegime(
                     lhs=statevar_obj,
                     rhs_map=ast.EqnRegimeDispatchMap(mapping)
                     )
             time_derivatives[statevar_obj] = rhs
 
-        self.builddata.timederivatives = time_derivatives.values()
+        self.builddata.timederivatives = list(time_derivatives.values())
         del self.builddata._time_derivatives_per_regime
 
         # Resolve the Assignments into a single object:
@@ -484,27 +484,27 @@ class AbstractBlockBuilder(object):
         for reg_ass in self.builddata._assigments_per_regime:
             maps_asses[reg_ass.lhs][reg_ass.regime] = reg_ass.rhs
 
-        for (ass_var, tds) in maps_asses.items():
+        for (ass_var, tds) in list(maps_asses.items()):
 
             assvar_obj = ast.AssignedVariable(symbol=ass_var)
             self._resolve_global_symbol(ass_var, assvar_obj)
 
-            mapping = dict([ (reg, rhs) for (reg, rhs) in tds.items()])
+            mapping = dict([ (reg, rhs) for (reg, rhs) in list(tds.items())])
             rhs = ast.EqnAssignmentByRegime(
                     lhs=assvar_obj,
                     rhs_map=ast.EqnRegimeDispatchMap(mapping)
                     )
             assignments[assvar_obj] = rhs
 
-        self.builddata.assignments = assignments.values()
+        self.builddata.assignments = list(assignments.values())
         del self.builddata._assigments_per_regime
 
         # Copy rt-grpahs into builddata
-        self.builddata.rt_graphs = self._all_rt_graphs.values()
+        self.builddata.rt_graphs = list(self._all_rt_graphs.values())
 
         # OK, perhaps we used some functions or constants from standard libraries,
         # and we didn't import them. Lets let this slide and automatically import them:
-        unresolved_symbols = [(k, v) for (k, v) in self.global_scope.iteritems() if not v.is_resolved()]
+        unresolved_symbols = [(k, v) for (k, v) in self.global_scope.items() if not v.is_resolved()]
         for (symbol, proxyobj) in unresolved_symbols:
             if not symbol.startswith('std.'):
                 continue
@@ -557,7 +557,7 @@ class AbstractBlockBuilder(object):
 
 
         # OK, make sure that we are not setting anything other than state_varaibles:
-        for (sym, initial_value) in self._default_state_variables.items():
+        for (sym, initial_value) in list(self._default_state_variables.items()):
             sv_objs = [td.lhs for td in self.builddata.timederivatives if td.lhs.symbol == sym]
             assert len(sv_objs) == 1, "Can't find state variable: %s" % sym
             sv_obj = sv_objs[0]
@@ -627,15 +627,15 @@ class AbstractBlockBuilder(object):
         # OK, everything in our namespace should be resoved.  If not, then
         # something has gone wrong.  Look for remaining unresolved symbols:
         # ########################################
-        unresolved_symbols = [(k, v) for (k, v) in self.global_scope.iteritems() if not v.is_resolved()]
+        unresolved_symbols = [(k, v) for (k, v) in self.global_scope.items() if not v.is_resolved()]
         # We shouldn't get here!
         if len(unresolved_symbols) != 0:
             raise KeyError('Unresolved Symbols:%s' % ([s[0] for s in unresolved_symbols]))
 
 
         # Temporary Hack:
-        self.builddata.funcdefs = self.builddata.funcdefs.values()
-        self.builddata.symbolicconstants = self.builddata.symbolicconstants.values()
+        self.builddata.funcdefs = list(self.builddata.funcdefs.values())
+        self.builddata.symbolicconstants = list(self.builddata.symbolicconstants.values())
         self.builddata.time_node = time_node
 
 
